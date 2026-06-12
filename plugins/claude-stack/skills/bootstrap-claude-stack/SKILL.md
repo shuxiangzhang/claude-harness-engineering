@@ -328,30 +328,13 @@ Both files already have correct YAML frontmatter (`globs:` matching the language
 
 For other languages (Go, Rust, etc.), don't fabricate a rule. Leave `.claude/rules/` empty (with its README) and let the user write a rule when they feel the need.
 
-### 3b. Install the production-readiness-assessor (user-level skill)
+### 3b. Point the user at the production-readiness-assessor
 
-The skill bundles a complete general-purpose readiness assessor at [`assets/production-readiness-assessor/`](assets/production-readiness-assessor/). It scores a codebase across thirteen dimensions (testing, error handling, observability, security, maintainability, CI/CD, configuration, performance, documentation, operations, data management, compliance & governance, dependency management), cites concrete evidence for every score, and produces a Markdown scorecard with a prioritised action plan.
+This plugin ships a general-purpose **`production-readiness-assessor`** skill alongside this one (a sibling under `skills/`). It scores a codebase across thirteen dimensions (testing, error handling, observability, security, maintainability, CI/CD, configuration, performance, documentation, operations, data management, compliance & governance, dependency management), cites concrete evidence for every score, and produces a Markdown scorecard with a prioritised action plan.
 
-Why bundle it here: it's general-purpose (applies to any codebase, any stack) and it benefits from its own context window when running. Both qualities map naturally to a **user-level skill** — installed once at `~/.claude/skills/` and available across every project the user works on.
+Because it's a sibling skill in the same plugin, there is **nothing to install or copy** — once this plugin is enabled, the assessor is already available. (This replaces the older behaviour of copying it into `~/.claude/skills/`; under plugin distribution that copy is redundant and only creates drift between copies.)
 
-Check whether it's already installed:
-
-```bash
-test -d ~/.claude/skills/production-readiness-assessor && echo "exists" || echo "missing"
-```
-
-- **If it's missing**, ask the user whether to install it. Default to yes — it's small, costs zero ambient tokens (progressive disclosure: only the metadata loads at session start, the body loads when triggered), and saves them ever having to write a readiness-assessment workflow from scratch. If they confirm:
-
-  ```bash
-  mkdir -p ~/.claude/skills
-  cp -r assets/production-readiness-assessor ~/.claude/skills/
-  ```
-
-- **If it already exists**, do nothing. The user has it; don't duplicate.
-
-Do not install it at project level (`.claude/skills/production-readiness-assessor/`) unless the user specifically wants it scoped to this repo only. User-level is the right home for general-purpose skills — the article itself notes that *"user-level skills live in `~/.claude/skills/` and are available across all projects."*
-
-Once installed, the user invokes it with phrases like *"is this production ready?"*, *"audit this repo before launch"*, *"score my codebase on prod readiness"*. The skill itself handles the rest, including using its bundled `scan_signals.py` script and the scorecard template.
+A brand-new project usually has little to score yet, so **don't run it now**. Just note in the step 7 report that when the project grows and nears launch, the user can trigger it with phrases like *"is this production ready?"*, *"audit this repo before launch"*, or *"score my codebase on prod readiness"* — no setup required. The skill handles the rest, including its bundled `scan_signals.py` and the scorecard template.
 
 ### 4. Write `.claude/settings.json`
 
@@ -502,6 +485,7 @@ Give the user a short summary:
 - Files created (with clickable paths if the harness renders them).
 - What's deliberately *not* there and why (rules, subagents, GitHub MCP).
 - The natural next moves: "When you've written a couple of files in the same directory and want consistency, ask me to add a path-scoped rule. When you push to GitHub for the first time, ask me to add the GitHub MCP server and the push-to-main gate."
+- "When the project grows and nears launch, run the **`production-readiness-assessor`** that ships with this plugin — just ask *'is this production ready?'* for an evidence-based scorecard and gate check. Nothing to install."
 
 ## Do not
 

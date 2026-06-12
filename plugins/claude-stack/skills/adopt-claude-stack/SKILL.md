@@ -16,7 +16,8 @@ The skill also bundles three ready-to-install templates at [`assets/`](assets/):
 - [`assets/CLAUDE-global-template.md`](assets/CLAUDE-global-template.md) — global behavioural rules (12 rules + 9 failure modes). Designed for `~/.claude/CLAUDE.md`.
 - [`assets/python-rule-template.md`](assets/python-rule-template.md) — a path-scoped rule for Python projects, with YAML frontmatter already set. Drop into `.claude/rules/`.
 - [`assets/typescript-rule-template.md`](assets/typescript-rule-template.md) — a path-scoped rule for JS/TS projects, with YAML frontmatter already set. Drop into `.claude/rules/`.
-- [`assets/production-readiness-assessor/`](assets/production-readiness-assessor/) — a complete general-purpose readiness-assessment skill (SKILL.md, three references, one Python signal-scanning script). Installed at user level (`~/.claude/skills/`), not project level. Triggers on phrases like *"is this production ready?"*
+
+The general-purpose **`production-readiness-assessor`** is *not* bundled here as an asset — it ships as its own sibling skill in this plugin (`skills/production-readiness-assessor/`). Nothing to copy; see step 6.
 
 ## The 8 layers and what to install on day one of adoption
 
@@ -204,32 +205,15 @@ Plan Mode separates *thinking* from *doing* and keeps exploration out of the mai
 
 There is nothing to install for this layer. In the final report (step 11), tell the user explicitly to use Plan Mode for any change with a non-trivial blast radius. This is a usage habit the configuration cannot enforce, but mentioning it doubles its uptake.
 
-### 6. Layers 4 and 5 — Subagents and skills (defer custom; install the assessor user-level)
+### 6. Layers 4 and 5 — Subagents and skills (defer custom; assessor ships with the plugin)
 
 Do not write *custom, project-specific* subagents or skills during adoption. The article is clear that both layers earn their keep when a task starts *repeating* (subagents) or a workflow becomes *stable enough to package by name* (skills). Neither condition is observable on day one of adoption.
 
-**Exception**: install the bundled `production-readiness-assessor` skill at user level. It's general-purpose (works on any codebase, any stack) and benefits from its own context window — both criteria for the article's "user-level skills live in `~/.claude/skills/` and are available across all projects" pattern.
+**The one general-purpose skill worth surfacing is `production-readiness-assessor`** — and it already ships as a sibling skill in this same plugin (`skills/production-readiness-assessor/`), so there is **nothing to install or copy**. Once this plugin is enabled, the assessor is available everywhere the plugin is. (This replaces the older behaviour of copying it into `~/.claude/skills/`; under plugin distribution that copy is redundant and only creates drift between copies.)
 
-Check whether it's already installed:
+An existing codebase usually has real substance to score, so in the step 11 report tell the user they can trigger it any time with phrases like *"is this production ready?"*, *"audit this codebase before launch"*, or *"score this repo on prod readiness"*. The skill handles the rest, including its bundled `scan_signals.py` and the scorecard template.
 
-```bash
-test -d ~/.claude/skills/production-readiness-assessor && echo "exists" || echo "missing"
-```
-
-- **If missing**, ask the user whether to install [`assets/production-readiness-assessor/`](assets/production-readiness-assessor/) at user level. Default to yes — it costs zero ambient tokens (progressive disclosure: only the metadata loads at session start, the body loads when triggered), and is more useful for an existing codebase than a fresh one because there's already substance to score. If they confirm:
-
-  ```bash
-  mkdir -p ~/.claude/skills
-  cp -r assets/production-readiness-assessor ~/.claude/skills/
-  ```
-
-- **If already installed**, do nothing.
-
-Do not install it at project level (`.claude/skills/production-readiness-assessor/`) unless the user explicitly wants it scoped to this repo. User-level is the natural home for a general-purpose readiness assessor — once installed, every existing or future project the user opens has it available without re-bundling.
-
-Once installed, the user can invoke it immediately with phrases like *"is this production ready?"*, *"audit this codebase before launch"*, *"score this repo on prod readiness"*. The skill handles the rest, including its bundled `scan_signals.py` and the scorecard template.
-
-**Other than the readiness assessor**, still create the empty `.claude/agents/` and `.claude/skills/` directories with short READMEs explaining what lives there (step 9). The READMEs should point at the bundled templates:
+Still create the empty `.claude/agents/` and `.claude/skills/` directories with short READMEs explaining what lives there (step 9). The READMEs should point at the bundled templates:
 
 - [`references/example-subagent.md`](references/example-subagent.md) — the `retrieval-reviewer` subagent, with the tool-allowlist and model-downshift pattern explained.
 - [`references/example-skill.md`](references/example-skill.md) — the `new-rag-eval` skill, with the `allowed-tools` and progressive-disclosure pattern explained.
@@ -387,6 +371,7 @@ The report should include:
   - Add a **subagent** in `.claude/agents/` the first time a review task repeats.
   - Add another **path-scoped rule** when a new directory grows enough to want consistency.
   - Add a **skill** in `.claude/skills/` when a workflow is stable enough to invoke by name.
+  - Run the **`production-readiness-assessor`** (ships with this plugin — just ask *"is this production ready?"*) before any launch or major release for an evidence-based scorecard and gate check.
   - Add **worktrees** when you catch yourself switching branches more than twice an hour.
   - Add **headless mode** + a GitHub Actions workflow when you want the agent shipping while you sleep — copy [`references/example-github-actions.yml`](references/example-github-actions.yml) as the starting point. The end-to-end "ninety minute shipment" narrative is in [`references/example-replay.md`](references/example-replay.md) and shows how all eight layers compose during a real task.
 

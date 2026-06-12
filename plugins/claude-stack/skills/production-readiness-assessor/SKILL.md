@@ -180,6 +180,7 @@ After delivering the report, briefly offer:
 - Drilling deeper into any failing dimension
 - An Excel version with auto-calculated totals and gate checks
 - Filing the gaps as Jira tickets if the user has Atlassian connected
+- If the repo has **no `.claude/` tuning config** (no `CLAUDE.md`, empty or absent `.claude/`), mention the sibling **`adopt-claude-stack`** skill — a tailored CLAUDE.md and path-scoped rules make the fixes this report recommends easier to land and future audits faster to run.
 
 Don't push. One short paragraph at the end is enough.
 

@@ -10,7 +10,7 @@
     {
       "name": "claude-stack",
       "source": "./plugins/claude-stack",
-      "description": "Bootstrap a new project's Claude Code tuning stack, or retrofit it into an existing repo. Bundles the bootstrap-claude-stack and adopt-claude-stack skills.",
+      "description": "Engineer the Claude Code harness for a repo. Bundles three skills: bootstrap-claude-stack (scaffold a new project), adopt-claude-stack (retrofit an existing repo), and production-readiness-assessor (audit readiness across 13 dimensions).",
       "version": "0.1.0",
       "author": { "name": "Shuxiang Zhang", "email": "shuxiang.zhang@supahuman.ai" },
       "license": "MIT",
