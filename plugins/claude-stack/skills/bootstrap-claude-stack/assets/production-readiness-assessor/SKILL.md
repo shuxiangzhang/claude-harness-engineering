@@ -51,7 +51,26 @@ The assessment covers these in order. Each dimension is scored 1–5 on multiple
 
 Total: 360 points. See `references/scorecard-template.md` for the full check list and `references/scoring-rubric.md` for what each score means.
 
-Dimensions 11–13 absorb material from the production-readiness checklist that didn't fit cleanly into the original ten — data lifecycle, regulatory posture, and supply-chain hygiene. Skip or weight-down any dimension that legitimately doesn't apply (e.g. a stateless CLI tool doesn't need Data Management) and note it in the report rather than docking points.
+These thirteen dimensions are a scoring instrument distilled from a longer source-of-truth checklist, bundled at [`references/production-readiness-checklist.md`](references/production-readiness-checklist.md) — 16 sections, ~230 concrete line items, drawn from years of running systems that have to stay up at 3am. The scorecard collapses those line items into scoreable rows; the checklist is where the granular, specific checks live. Consult it during evidence-gathering (Step 3) whenever a scorecard row is too coarse and you need the underlying concrete checks. The 16 checklist sections map onto the 13 dimensions as follows:
+
+| Checklist section | Scored under dimension |
+|---|---|
+| 1. Testing | 1. Functional Correctness & Testing |
+| 2. Input Validation / 3. Output Validation | 4. Security (boundaries) + 1. Testing (output assertions) |
+| 4. Error Handling and Resilience | 2. Error Handling & Resilience |
+| 5. Observability | 3. Observability |
+| 6. Security | 4. Security |
+| 7. Data Management | 11. Data Management |
+| 8. CI/CD and Deployment / 16. Release Management | 6. CI/CD & Release Process |
+| 9. Configuration Management | 7. Configuration & Environment Management |
+| 10. Performance | 8. Performance & Scalability |
+| 11. Maintainability | 5. Maintainability & Code Quality |
+| 12. Documentation | 9. Documentation & Knowledge |
+| 13. Operational Readiness | 10. Operations & Oncall |
+| 14. Compliance and Governance | 12. Compliance & Governance |
+| 15. Dependency Management | 13. Dependency Management |
+
+Skip or weight-down any dimension that legitimately doesn't apply (e.g. a stateless CLI tool doesn't need Data Management) and note it in the report rather than docking points.
 
 ## Workflow
 
@@ -85,7 +104,7 @@ Only load the sections that apply. If the project uses multiple stacks (monorepo
 
 ### Step 3 — Gather evidence per dimension
 
-Go dimension by dimension. For each check in the scorecard, look for the evidence specified in `references/stack-signals.md` and `references/scoring-rubric.md`. Read actual files. Cite paths.
+Go dimension by dimension. For each check in the scorecard, look for the evidence specified in `references/stack-signals.md` and `references/scoring-rubric.md`. When a scorecard row is too coarse to act on, open [`references/production-readiness-checklist.md`](references/production-readiness-checklist.md) and work the granular line items for that dimension (use the section→dimension map above) — they spell out the concrete things to grep for and read. Read actual files. Cite paths.
 
 Aim to inspect:
 
@@ -186,6 +205,7 @@ Don't push. One short paragraph at the end is enough.
 
 ## Files in this skill
 
+- `references/production-readiness-checklist.md` — the source-of-truth checklist (16 sections, ~230 line items) the 13 dimensions distill; consult for granular per-dimension checks
 - `references/scorecard-template.md` — the blank template to fill in
 - `references/scoring-rubric.md` — what each score means, per dimension, with examples
 - `references/stack-signals.md` — per-stack evidence to look for (Node/TS, Python, Go, Java/Kotlin, Ruby, Rust, .NET)
