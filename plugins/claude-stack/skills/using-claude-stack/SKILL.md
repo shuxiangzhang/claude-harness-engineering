@@ -1,11 +1,13 @@
 ---
 name: using-claude-stack
-description: Use when starting any conversation or task in a project where the claude-stack plugin is enabled — the routing map for which claude-stack skill applies at each stage of the development lifecycle.
+description: Use when starting any conversation or coding task with the claude-stack skills available (Claude Code or Codex) — the routing map for which skill applies at each stage of the development lifecycle.
 ---
 
 # Using claude-stack
 
 If there is even a **1% chance** a skill below applies to what you are doing, invoke it before responding or acting. If an invoked skill turns out wrong for the situation, you may set it aside — but the check comes first, even before clarifying questions.
+
+**Invoking a skill:** Claude Code — the Skill tool, or `/claude-stack:<name>`; Codex — mention the skill by name, or let its description auto-match. Either way, read the skill's body and follow it; don't just act on this one-line routing entry.
 
 ## Routing map
 

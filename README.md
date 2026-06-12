@@ -13,6 +13,11 @@ It fuses three lineages:
 
 ## Install
 
+The skills are plain `SKILL.md` files (the format Claude Code and Codex share), so the same
+kit runs on both.
+
+### Claude Code (plugin marketplace)
+
 ```
 /plugin marketplace add shuxiangzhang/claude-harness-engineering
 /plugin install claude-stack@claude-harness-engineering
@@ -20,6 +25,21 @@ It fuses three lineages:
 
 A SessionStart hook then injects a one-page routing map into each session, so the right
 skill fires from natural phrasing — `/claude-stack:<skill>` also invokes any skill directly.
+
+### Codex (native skill discovery)
+
+Clone and symlink the skills into Codex's skill path:
+
+```bash
+git clone https://github.com/shuxiangzhang/claude-harness-engineering.git ~/.codex/claude-harness-engineering
+mkdir -p ~/.agents/skills
+ln -s ~/.codex/claude-harness-engineering/plugins/claude-stack/skills ~/.agents/skills/claude-stack
+```
+
+Windows (junction): see [.codex/INSTALL.md](.codex/INSTALL.md). Full guide:
+[docs/README.codex.md](docs/README.codex.md). Codex has no SessionStart hook, so it discovers
+the `using-claude-stack` routing map natively instead of having it injected — everything else
+behaves the same.
 
 ## The skills (17)
 
