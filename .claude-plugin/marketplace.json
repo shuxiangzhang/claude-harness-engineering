@@ -1,0 +1,21 @@
+{
+  "name": "claude-harness-engineering",
+  "owner": {
+    "name": "Shuxiang Zhang",
+    "email": "shuxiang.zhang@supahuman.ai"
+  },
+  "description": "Harness-engineering skills for Claude Code: scaffold the tuning stack into a new project, or retrofit it into an existing codebase.",
+  "version": "0.1.0",
+  "plugins": [
+    {
+      "name": "claude-stack",
+      "source": "./plugins/claude-stack",
+      "description": "Bootstrap a new project's Claude Code tuning stack, or retrofit it into an existing repo. Bundles the bootstrap-claude-stack and adopt-claude-stack skills.",
+      "version": "0.1.0",
+      "author": { "name": "Shuxiang Zhang", "email": "shuxiang.zhang@supahuman.ai" },
+      "license": "MIT",
+      "keywords": ["claude-code", "skills", "harness", "tuning", "setup", "scaffold"],
+      "category": "developer-tools"
+    }
+  ]
+}

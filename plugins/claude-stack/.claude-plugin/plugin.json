@@ -1,0 +1,8 @@
+{
+  "name": "claude-stack",
+  "description": "Engineer the Claude Code harness for a repo. Bundles two skills: bootstrap-claude-stack (scaffold the minimal tuning stack into a brand-new project) and adopt-claude-stack (survey an existing codebase and retrofit a tailored CLAUDE.md, path-scoped rules, a formatter hook, and MCP servers).",
+  "version": "0.1.0",
+  "author": { "name": "Shuxiang Zhang", "email": "shuxiang.zhang@supahuman.ai" },
+  "license": "MIT",
+  "keywords": ["claude-code", "harness", "tuning", "setup", "scaffold", "skills"]
+}

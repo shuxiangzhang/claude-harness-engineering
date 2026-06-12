@@ -1,0 +1,79 @@
+# Example: nightly-eval GitHub Actions workflow (Layer 8)
+#
+# Verbatim from the article: a headless Claude Code run that executes the
+# citation eval suite nightly, drafts a fix PR if anything regresses, and
+# uses Deferred Permissions so the push-to-main gate pauses the job until
+# a human approves.
+#
+# Adoption note: this skill does NOT install this workflow on day one.
+# Layer 8 (worktrees + headless) is "graduate when you want the agent
+# shipping while you sleep." Use this file as the on-ramp when the user
+# is ready.
+
+name: claude-nightly-evals
+on:
+  schedule: [{cron: "0 7 * * *"}]
+  workflow_dispatch:
+
+jobs:
+  run-evals-and-open-pr:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      GITHUB_TOKEN:      ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv sync
+
+      - name: Install Claude Code
+        run: npm i -g @anthropic-ai/claude-code@latest
+
+      - name: Run nightly eval + draft PR (headless)
+        id: claude
+        run: |
+          set -o pipefail
+          claude -p \
+            --bare \
+            --output-format stream-json \
+            --allowedTools "Bash(uv run:*),Read,Grep,Glob,Write,Edit,mcp__github__*" \
+            --append-system-prompt "You are the nightly eval runner. \
+              Run the citations eval suite. If regressions appear, \
+              open a draft PR with a fix attempt and the eval diff." \
+            "Run: uv run python -m evals.run --suite citations. \
+             If any case regresses, implement the minimal fix and open \
+             a draft PR against main via the GitHub MCP." \
+          | tee claude.ndjson
+
+          if grep -q '"permissionDecision":"defer"' claude.ndjson; then
+            echo "deferred=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Resume if the run deferred on push-to-main
+        if: steps.claude.outputs.deferred == 'true'
+        run: |
+          SESSION_ID="$(jq -r 'select(.type=="deferred") | .session_id' \
+                        claude.ndjson | head -n1)"
+          claude --resume "$SESSION_ID" \
+            --append-system-prompt "Approved. Continue." \
+            --output-format stream-json
+
+# Article walkthrough of what this does:
+#
+#   The allowed tools interact with the hooks we built earlier. The job
+#   runs the evaluation. It drafts the fix and attempts to push to the
+#   main branch. The hook catches the push and defers the permission.
+#   The pipeline parses the JSON log, sets the output variable, and
+#   pauses. A human reviews the structured log and approves it. The
+#   resume command picks up the exact session ID and finishes the job.
+#
+# To adapt this for the user's repo:
+# - Replace `uv sync` and `uv run python -m evals.run ...` with the
+#   user's actual install + eval commands.
+# - Replace the `--append-system-prompt` text with the user's task.
+# - Tighten the `--allowedTools` list to what the task actually needs.
+# - The `--bare` flag strips local configuration for reproducible
+#   behaviour in CI; keep it on.
