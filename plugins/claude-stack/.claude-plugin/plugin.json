@@ -1,6 +1,6 @@
 {
   "name": "claude-stack",
-  "description": "A complete coding-assist harness for Claude Code: setup skills (bootstrap/adopt the tuning stack), a constitution-gated spec-driven feature loop (brainstorm, specify, clarify, plan, tasks, analyze, implement), engineering discipline (tdd, debug, verify-done, finish-branch), a 13-dimension production-readiness audit, and a SessionStart routing hook. 17 skills; distilled from github/spec-kit and obra/superpowers (MIT, attributed).",
+  "description": "A complete coding-assist harness for Claude Code: setup skills (bootstrap/adopt the tuning stack), a constitution-gated spec-driven feature loop (brainstorm, specify, clarify, plan, tasks, analyze, implement), engineering discipline (tdd, debug, verify-done, finish-branch), capture-lesson mistake-memory (.claude/lessons/), a 13-dimension production-readiness audit, and a SessionStart routing + lessons hook. 18 skills; distilled from github/spec-kit and obra/superpowers (MIT, attributed).",
   "version": "0.2.0",
   "author": { "name": "Shuxiang Zhang", "email": "shuxiang.zhang@supahuman.ai" },
   "license": "MIT",

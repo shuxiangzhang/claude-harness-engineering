@@ -16,7 +16,7 @@ Or follow [.codex/INSTALL.md](../.codex/INSTALL.md) manually.
 
 Codex scans `~/.agents/skills/` at startup, parses each `SKILL.md` frontmatter, and loads a
 skill's body on demand when its `description` matches the task. A single symlink makes all 17
-claude-stack skills visible:
+claude-stack skills visible (18 in total):
 
 ```
 ~/.agents/skills/claude-stack/ → ~/.codex/claude-harness-engineering/plugins/claude-stack/skills/
@@ -33,6 +33,7 @@ Codex and Claude Code share — nothing in the skills needs to change between pl
 | Discovery | plugin install | symlink + native scan |
 | Routing map (`using-claude-stack`) | injected by SessionStart hook | self-discovered by description |
 | Invoke a skill | Skill tool / `/claude-stack:<name>` | mention by name / auto-match |
+| Lessons (`.claude/lessons/`) | folder + index auto-injected by hook | folder + index recalled via the `AGENTS.md`/`CLAUDE.md` pointer |
 | Bundled templates & reviewer prompts | ✅ | ✅ |
 | The `production-readiness-assessor` script | ✅ | ✅ (needs Python, same as Claude Code) |
 

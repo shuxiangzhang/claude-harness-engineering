@@ -51,16 +51,16 @@ Run `ls -la` (or `Get-ChildItem`) in the working directory. If you see:
 ### 2. Create the directory structure
 
 ```
-mkdir -p .claude/rules .claude/agents .claude/skills .claude/hooks
+mkdir -p .claude/rules .claude/agents .claude/skills .claude/hooks .claude/lessons
 ```
 
-Each subdirectory gets a short `README.md` explaining what lives there (see step 2a). The dirs are empty otherwise — no placeholder rules, agents, skills, or hook scripts. The READMEs serve as discoverability cues and mini-docs so the user (or the agent on a later turn) knows where new things go.
+Each subdirectory gets a short `README.md` explaining what lives there (see step 2a). The dirs are empty otherwise — no placeholder rules, agents, skills, or hook scripts. (`.claude/lessons/` is the one exception that also gets an empty `LESSONS.md` index — see 2a — because lessons accrue from day one as mistakes get corrected.) The READMEs serve as discoverability cues and mini-docs so the user (or the agent on a later turn) knows where new things go.
 
 `.claude/logs/` is *not* created up front — that one is genuinely noise until something actually writes a log. The `.gitignore` in step 6 still excludes it.
 
 ### 2a. Write a README in each subdirectory
 
-Write these four small files. They always get written regardless of step 2b, and double as documentation and as triggers for the agent later ("oh, there's a `rules/` dir, that's where path-scoped behaviour goes").
+Write these five small files. They always get written regardless of step 2b, and double as documentation and as triggers for the agent later ("oh, there's a `rules/` dir, that's where path-scoped behaviour goes").
 
 **`.claude/rules/README.md`:**
 ```markdown
@@ -169,6 +169,31 @@ esac
 
 Then reference it from `settings.json` under `hooks.PreToolUse`.
 ```
+
+**`.claude/lessons/README.md`:**
+```markdown
+# Lessons
+
+Mistakes we've made once and don't want to repeat — shared team memory,
+committed to git. Each lesson is one file; `LESSONS.md` indexes them.
+
+Add one with the `capture-lesson` skill the moment a mistake is corrected.
+Recall: skim `LESSONS.md` before non-trivial work (the claude-stack
+SessionStart hook also injects it automatically once it has entries).
+```
+
+Also write an **empty index** at `.claude/lessons/LESSONS.md` so the convention is visible from day one:
+```markdown
+# Lessons
+
+One line per lesson; the full lesson is in the linked file. Skim before non-trivial work.
+
+<!-- Added via the capture-lesson skill. Format:
+- [short title](slug.md) — trigger phrase
+-->
+```
+
+Leave it entry-free until a real mistake is captured. Lessons are committed (shared knowledge), so they are *not* added to `.gitignore` in step 6.
 
 ### 2b. Offer to seed each subdirectory now (or skip)
 
@@ -288,6 +313,10 @@ Then write the project stub. Use this template. Substitute `{{project_name}}`, `
 ## Guardrails
 - Never commit secrets. Use environment variables.
 - Surface ambiguity rather than guessing.
+
+## Lessons
+Before non-trivial work, skim `.claude/lessons/LESSONS.md` — mistakes already made once.
+When a mistake is corrected, capture it there (use the `capture-lesson` skill).
 
 ## Notes
 This file is a living document. Add path-scoped rules under `.claude/rules/`

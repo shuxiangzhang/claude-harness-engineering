@@ -24,11 +24,23 @@ escape_for_json() {
 
 routing_escaped=$(escape_for_json "$routing_content")
 
+# If this project has accrued lessons (past mistakes), inject the index too, so they
+# resurface automatically. Guarded: only when the file exists AND has real entries —
+# a no-op in repos that never adopted the stack, or whose lessons folder is empty.
+project_dir="${CLAUDE_PROJECT_DIR:-$PWD}"
+lessons_index="${project_dir}/.claude/lessons/LESSONS.md"
+lessons_escaped=""
+if [ -f "$lessons_index" ] && grep -q '^- \[' "$lessons_index" 2>/dev/null; then
+    lessons_content=$(cat "$lessons_index" 2>/dev/null || echo "")
+    lessons_block=$'\n\n**Project lessons — past mistakes, do not repeat (open the linked file when a trigger matches):**\n\n'"${lessons_content}"
+    lessons_escaped=$(escape_for_json "$lessons_block")
+fi
+
 cat <<EOF
 {
   "hookSpecificOutput": {
     "hookEventName": "SessionStart",
-    "additionalContext": "<EXTREMELY_IMPORTANT>\nYou have the claude-stack harness.\n\n**Below is your 'claude-stack:using-claude-stack' skill — the routing map for the rest. For all other skills, use the Skill tool:**\n\n${routing_escaped}\n</EXTREMELY_IMPORTANT>"
+    "additionalContext": "<EXTREMELY_IMPORTANT>\nYou have the claude-stack harness.\n\n**Below is your 'claude-stack:using-claude-stack' skill — the routing map for the rest. For all other skills, use the Skill tool:**\n\n${routing_escaped}${lessons_escaped}\n</EXTREMELY_IMPORTANT>"
   }
 }
 EOF

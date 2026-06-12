@@ -27,6 +27,7 @@ If there is even a **1% chance** a skill below applies to what you are doing, in
 | Bug / test failure / unexpected behavior | `debug` |
 | About to claim done / commit / PR | `verify-done` |
 | Feature branch complete | `finish-branch` |
+| A mistake was just corrected / "don't do that again" / "remember this" | `capture-lesson` |
 | Pre-launch readiness audit | `production-readiness-assessor` |
 | Package a repeated workflow as a skill | `write-skill` |
 

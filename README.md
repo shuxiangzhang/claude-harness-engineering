@@ -41,7 +41,7 @@ Windows (junction): see [.codex/INSTALL.md](.codex/INSTALL.md). Full guide:
 the `using-claude-stack` routing map natively instead of having it injected — everything else
 behaves the same.
 
-## The skills (17)
+## The skills (18)
 
 ### Setup & governance
 
@@ -78,6 +78,7 @@ behaves the same.
 | Skill | Purpose |
 |---|---|
 | `using-claude-stack` | The routing map (injected each session by the hook) |
+| `capture-lesson` | Record a mistake-and-correction in `.claude/lessons/` so it isn't repeated; the index resurfaces each session |
 | `write-skill` | Create new skills with TDD-for-documentation (baseline failure → minimal skill → close loopholes) |
 
 ## The intended flow
@@ -93,6 +94,11 @@ finish-branch → production-readiness-assessor before launch
 Each stage hands off to the next; each gate (spec checklist, constitution check,
 analyze findings, implement's checklist halt, verify-done's evidence rule) is
 designed to fail loudly rather than let plausible-but-wrong work through.
+
+Cutting across all of it, **`capture-lesson`** writes mistakes-and-corrections to
+`.claude/lessons/` (committed, shared); the index resurfaces automatically at the start of
+every session, so the harness gets harder to fool the same way twice. `bootstrap`/`adopt`
+create the folder; the SessionStart hook injects it once it has entries.
 
 ## Use without the marketplace
 
@@ -113,7 +119,7 @@ cp -r plugins/claude-stack/skills/tdd ~/.claude/skills/
 └── plugins/claude-stack/
     ├── .claude-plugin/plugin.json
     ├── hooks/                  # SessionStart routing-map injection
-    └── skills/                 # 17 skills, each with bundled assets/references
+    └── skills/                 # 18 skills, each with bundled assets/references
 ```
 
 ## Attribution

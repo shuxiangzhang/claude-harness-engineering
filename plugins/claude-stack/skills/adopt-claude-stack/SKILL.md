@@ -136,6 +136,10 @@ Read the existing project `CLAUDE.md` (if any) first. **Never silently overwrite
 - If a change touches `{{directory with a rule file}}`, read `.claude/rules/{{rule}}.md` before planning.
 - Keep functions under ~40 lines. Split by responsibility, not by length.
 
+## Lessons
+- Before non-trivial work, skim `.claude/lessons/LESSONS.md` — mistakes already made once in this repo.
+- When a mistake is corrected, capture it there (use the `capture-lesson` skill).
+
 ## Before opening a PR
 - {{Detected lint / test commands}}
 - Update `CHANGELOG.md` under `## Unreleased`. (only if the repo has one)
@@ -335,7 +339,7 @@ Defer the code-graph server (vexp or similar) and the search server until the co
 
 ### 9. Empty subdirectories with READMEs
 
-Create `.claude/rules/`, `.claude/agents/`, `.claude/skills/`, `.claude/hooks/` and drop a short README in each. The READMEs serve discoverability and mini-docs — they tell the user (or the agent on a later turn) where new things go, and they include a copy-paste example.
+Create `.claude/rules/`, `.claude/agents/`, `.claude/skills/`, `.claude/hooks/`, `.claude/lessons/` and drop a short README in each. The READMEs serve discoverability and mini-docs — they tell the user (or the agent on a later turn) where new things go, and they include a copy-paste example.
 
 Write each README with an example drawn from the article so the user has a working reference right next to where it gets installed:
 
@@ -343,6 +347,7 @@ Write each README with an example drawn from the article so the user has a worki
 - **`agents/README.md`** — point at the article's `retrieval-reviewer` subagent.
 - **`skills/README.md`** — point at the article's `new-rag-eval` skill (and note that user-level skills live in `~/.claude/skills/`).
 - **`hooks/README.md`** — explain that one hook is already wired (post-tool formatter, and push gate if remote) and point at the article's gate example as the shape for adding more.
+- **`lessons/README.md`** — explain that lessons are committed mistake-memory (past mistakes, not standing conventions); point at the `capture-lesson` skill for the format. Also write an empty `lessons/LESSONS.md` index (header + format comment, no entries). Lessons are committed, so do **not** add `.claude/lessons/` to `.gitignore`. Recall: skim the index before non-trivial work; the SessionStart hook auto-injects it once it has entries.
 
 Do not create `.claude/logs/` — that directory appears the first time the `PermissionDenied` audit hook writes to it. `.gitignore` should still exclude it (step 10).
 
