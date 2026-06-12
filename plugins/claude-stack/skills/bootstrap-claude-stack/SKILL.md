@@ -485,6 +485,7 @@ Give the user a short summary:
 - Files created (with clickable paths if the harness renders them).
 - What's deliberately *not* there and why (rules, subagents, GitHub MCP).
 - The natural next moves: "When you've written a couple of files in the same directory and want consistency, ask me to add a path-scoped rule. When you push to GitHub for the first time, ask me to add the GitHub MCP server and the push-to-main gate."
+- "To build your first feature, this plugin ships the full development loop: **`brainstorm`** (refine the idea) → **`specify`** (formal spec) → **`plan`** → **`tasks`** → **`implement`** — with **`tdd`**, **`debug`**, and **`verify-done`** enforcing discipline throughout. Optionally seed project principles first with **`constitution`**."
 - "When the project grows and nears launch, run the **`production-readiness-assessor`** that ships with this plugin — just ask *'is this production ready?'* for an evidence-based scorecard and gate check. Nothing to install."
 
 ## Do not

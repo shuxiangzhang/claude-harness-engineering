@@ -1,8 +1,8 @@
 {
   "name": "claude-stack",
-  "description": "Engineer the Claude Code harness for a repo. Bundles three skills: bootstrap-claude-stack (scaffold the minimal tuning stack into a brand-new project), adopt-claude-stack (survey an existing codebase and retrofit a tailored CLAUDE.md, path-scoped rules, a formatter hook, and MCP servers), and production-readiness-assessor (audit a repo across 13 dimensions and produce an evidence-based scorecard).",
-  "version": "0.1.0",
+  "description": "A complete coding-assist harness for Claude Code: setup skills (bootstrap/adopt the tuning stack), a constitution-gated spec-driven feature loop (brainstorm, specify, clarify, plan, tasks, analyze, implement), engineering discipline (tdd, debug, verify-done, finish-branch), a 13-dimension production-readiness audit, and a SessionStart routing hook. 17 skills; distilled from github/spec-kit and obra/superpowers (MIT, attributed).",
+  "version": "0.2.0",
   "author": { "name": "Shuxiang Zhang", "email": "shuxiang.zhang@supahuman.ai" },
   "license": "MIT",
-  "keywords": ["claude-code", "harness", "tuning", "setup", "scaffold", "skills"]
+  "keywords": ["claude-code", "harness", "spec-driven", "tdd", "workflow", "skills", "setup", "discipline"]
 }

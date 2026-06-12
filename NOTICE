@@ -1,0 +1,23 @@
+claude-harness-engineering
+Copyright (c) 2026 Shuxiang Zhang
+
+This project distills and adapts material from two MIT-licensed projects:
+
+1. spec-kit — https://github.com/github/spec-kit
+   Copyright (c) GitHub, Inc.
+   Source of: the spec-driven workflow shape (specify / clarify / plan / tasks /
+   analyze / implement), the constitution governance model and template, the
+   spec/plan/tasks template skeletons, the [NEEDS CLARIFICATION] marker mechanic,
+   the checklist gate, and the cross-artifact analysis taxonomy.
+
+2. superpowers — https://github.com/obra/superpowers
+   Copyright (c) Jesse Vincent
+   Source of: the TDD, systematic-debugging, verification-before-completion, and
+   finishing-a-development-branch disciplines (iron laws and rationalization
+   tables preserved near-verbatim), the brainstorming dialogue pattern, the
+   subagent-driven implementation chain and its reviewer prompts, the
+   writing-skills methodology, the SessionStart context-injection hook technique,
+   and the skill-routing ("using-X") mechanism.
+
+Both are used under the MIT License. Each derived skill notes its lineage in a
+"## Lineage" section.

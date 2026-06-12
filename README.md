@@ -1,74 +1,107 @@
 # claude-harness-engineering
 
-A Claude Code plugin marketplace for **engineering the agent harness** of a repo — the
-CLAUDE.md, path-scoped rules, formatter hooks, and MCP servers that shape how Claude Code
-works inside a project.
+A Claude Code plugin marketplace for **engineering the agent harness** — one plugin,
+**`claude-stack`**, that covers the full journey: configure Claude Code for a repo,
+govern it with principles, run a spec-driven feature loop with hard quality gates,
+enforce engineering discipline, and audit readiness before launch.
 
-It ships one plugin, **`claude-stack`**, bundling three complementary skills that cover the
-journey from empty repo to launch-ready:
+It fuses three lineages:
 
-| Skill | Use when | What it does |
-|---|---|---|
-| **`bootstrap-claude-stack`** | You're starting a **brand-new / empty** project | Scaffolds the minimal stack: a stub `CLAUDE.md`, a `settings.json` formatter hook, an `.mcp.json` with filesystem + context7, and `git init`. Deliberately omits everything that can't earn its keep on day one. |
-| **`adopt-claude-stack`** | You have an **existing codebase** | Surveys the repo first, then retrofits a *tailored* `CLAUDE.md`, 2–3 path-scoped rules for the most-touched directories, a formatter hook, and three MCP servers (adds GitHub only if a remote exists). |
-| **`production-readiness-assessor`** | You're **nearing launch** and want to know if the repo is prod-grade | Audits the codebase across 13 dimensions (testing, error handling, observability, security, CI/CD, data, compliance, dependencies, …), cites concrete evidence per score, and produces a Markdown scorecard with a gate check and prioritised action plan. Trigger with *"is this production ready?"* |
-
-The two setup skills (`bootstrap` / `adopt`) hand off to the assessor as the project matures —
-and the assessor points back at `adopt-claude-stack` when it finds a repo with no `.claude/`
-config. They also ship ready-made Python / TypeScript path-scoped rule templates and a global
-`CLAUDE.md` template.
-
-The design follows Anubhav's *"I Spent 6 Months Tuning Claude Code"* eight-layer stack, installing
-only the floor that earns its keep — and pointing you at the rest as the project surfaces the need.
+- the **8-layer tuning stack** (CLAUDE.md, path-scoped rules, hooks, MCP servers) — setup skills
+- **[github/spec-kit](https://github.com/github/spec-kit)**'s spec-driven workflow (spec → plan → tasks → implement, with constitution gates and cross-artifact analysis)
+- **[obra/superpowers](https://github.com/obra/superpowers)**' engineering discipline (TDD iron law, systematic debugging, evidence-before-claims, subagent-driven implementation)
 
 ## Install
-
-In Claude Code:
 
 ```
 /plugin marketplace add shuxiangzhang/claude-harness-engineering
 /plugin install claude-stack@claude-harness-engineering
 ```
 
-Then invoke a skill by name, e.g. `/bootstrap-claude-stack` in a fresh repo,
-`/adopt-claude-stack` in an existing one, or `/production-readiness-assessor` before a launch.
-Claude will also trigger them automatically from phrases like *"set up Claude Code for this
-repo"*, *"scaffold the .claude folder"*, or *"is this production ready?"*.
+A SessionStart hook then injects a one-page routing map into each session, so the right
+skill fires from natural phrasing — `/claude-stack:<skill>` also invokes any skill directly.
 
-To update later:
+## The skills (17)
+
+### Setup & governance
+
+| Skill | Use when |
+|---|---|
+| `bootstrap-claude-stack` | Brand-new/empty project — scaffold the minimal tuning stack |
+| `adopt-claude-stack` | Existing codebase — survey, then retrofit a tailored stack |
+| `constitution` | Establish/amend the project's non-negotiable principles (gates `plan` and `analyze`) |
+
+### The feature loop (spec-driven)
+
+| Skill | Produces |
+|---|---|
+| `brainstorm` | Validated design via one-question-at-a-time dialogue |
+| `specify` | `specs/NNN-slug/spec.md` — prioritized user stories, testable FRs, measurable success criteria, quality checklist |
+| `clarify` | Up to 5 targeted questions, answers encoded back into the spec |
+| `plan` | `plan.md` (constitution-gated) + `research.md`, `data-model.md`, `contracts/` |
+| `tasks` | Story-grouped `tasks.md` — `[ID] [P?] [Story]` format, 2–5-minute tasks, exact paths |
+| `analyze` | Read-only cross-artifact audit, severity-ranked (constitution conflicts = CRITICAL) |
+| `implement` | Checklist-gated execution — fresh subagent per task, two-stage review (spec compliance → code quality) |
+
+### Discipline & completion
+
+| Skill | Iron law |
+|---|---|
+| `tdd` | *No production code without a failing test first* |
+| `debug` | *No fixes without root-cause investigation first* (4 phases; 3 failed fixes → question the architecture) |
+| `verify-done` | *No completion claims without fresh verification evidence* |
+| `finish-branch` | Tests verified → merge / PR / keep / discard (typed confirmation) → cleanup |
+| `production-readiness-assessor` | Pre-launch audit across 13 dimensions → evidence-cited scorecard + gate check |
+
+### Meta
+
+| Skill | Purpose |
+|---|---|
+| `using-claude-stack` | The routing map (injected each session by the hook) |
+| `write-skill` | Create new skills with TDD-for-documentation (baseline failure → minimal skill → close loopholes) |
+
+## The intended flow
 
 ```
-/plugin marketplace update claude-harness-engineering
+bootstrap / adopt            → harness configured
+constitution                 → principles that gate everything below
+brainstorm → specify → clarify → plan → tasks → analyze
+implement  (tdd · debug · verify-done throughout)
+finish-branch → production-readiness-assessor before launch
 ```
+
+Each stage hands off to the next; each gate (spec checklist, constitution check,
+analyze findings, implement's checklist halt, verify-done's evidence rule) is
+designed to fail loudly rather than let plausible-but-wrong work through.
 
 ## Use without the marketplace
 
-Each skill is a self-contained `SKILL.md` directory. To install one directly, copy it into
-your skills folder:
+Each skill is a self-contained directory — copy any of them straight into
+`~/.claude/skills/` (personal) or `.claude/skills/` (project):
 
 ```bash
-# personal (all projects)
-cp -r plugins/claude-stack/skills/adopt-claude-stack ~/.claude/skills/
-
-# project-scoped (this repo only)
-cp -r plugins/claude-stack/skills/bootstrap-claude-stack .claude/skills/
+cp -r plugins/claude-stack/skills/tdd ~/.claude/skills/
 ```
+
+(The SessionStart hook only ships via the plugin.)
 
 ## Layout
 
 ```
 .
-├── .claude-plugin/
-│   └── marketplace.json        # marketplace manifest
-└── plugins/
-    └── claude-stack/
-        ├── .claude-plugin/
-        │   └── plugin.json     # plugin manifest
-        └── skills/
-            ├── bootstrap-claude-stack/
-            ├── adopt-claude-stack/
-            └── production-readiness-assessor/
+├── .claude-plugin/marketplace.json
+└── plugins/claude-stack/
+    ├── .claude-plugin/plugin.json
+    ├── hooks/                  # SessionStart routing-map injection
+    └── skills/                 # 17 skills, each with bundled assets/references
 ```
+
+## Attribution
+
+Workflow structure, templates, and gate mechanics distilled from
+[github/spec-kit](https://github.com/github/spec-kit) (MIT). Discipline skills, the
+session-hook mechanism, and the subagent review chain distilled from
+[obra/superpowers](https://github.com/obra/superpowers) (MIT). See [NOTICE](NOTICE).
 
 ## License
 

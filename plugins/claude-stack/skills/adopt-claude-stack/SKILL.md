@@ -371,6 +371,7 @@ The report should include:
   - Add a **subagent** in `.claude/agents/` the first time a review task repeats.
   - Add another **path-scoped rule** when a new directory grows enough to want consistency.
   - Add a **skill** in `.claude/skills/` when a workflow is stable enough to invoke by name.
+  - For the next substantial feature, use the plugin's development loop: **`brainstorm`** → **`specify`** → **`plan`** → **`tasks`** → **`implement`**, with **`tdd`**/**`debug`**/**`verify-done`** as standing discipline. Seed non-negotiable principles with **`constitution`** so `plan` and `analyze` can gate against them.
   - Run the **`production-readiness-assessor`** (ships with this plugin — just ask *"is this production ready?"*) before any launch or major release for an evidence-based scorecard and gate check.
   - Add **worktrees** when you catch yourself switching branches more than twice an hour.
   - Add **headless mode** + a GitHub Actions workflow when you want the agent shipping while you sleep — copy [`references/example-github-actions.yml`](references/example-github-actions.yml) as the starting point. The end-to-end "ninety minute shipment" narrative is in [`references/example-replay.md`](references/example-replay.md) and shows how all eight layers compose during a real task.

@@ -1,0 +1,6 @@
+# Shell scripts must keep LF endings — bash on Windows breaks on CRLF.
+*.sh text eol=lf
+hooks.json text eol=lf
+
+# Default: normalize text files
+* text=auto

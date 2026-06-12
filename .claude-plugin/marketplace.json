@@ -4,14 +4,14 @@
     "name": "Shuxiang Zhang",
     "email": "shuxiang.zhang@supahuman.ai"
   },
-  "description": "Harness-engineering skills for Claude Code: scaffold the tuning stack into a new project, or retrofit it into an existing codebase.",
-  "version": "0.1.0",
+  "description": "A complete coding-assist harness for Claude Code: harness setup, a constitution-gated spec-driven feature loop, engineering discipline, and pre-launch auditing.",
+  "version": "0.2.0",
   "plugins": [
     {
       "name": "claude-stack",
       "source": "./plugins/claude-stack",
-      "description": "Engineer the Claude Code harness for a repo. Bundles three skills: bootstrap-claude-stack (scaffold a new project), adopt-claude-stack (retrofit an existing repo), and production-readiness-assessor (audit readiness across 13 dimensions).",
-      "version": "0.1.0",
+      "description": "The complete harness in one plugin — 17 skills: bootstrap/adopt the tuning stack, constitution governance, the spec-driven loop (brainstorm, specify, clarify, plan, tasks, analyze, implement), discipline (tdd, debug, verify-done, finish-branch), production-readiness audit, write-skill, and a SessionStart routing hook. Distilled from github/spec-kit and obra/superpowers (MIT).",
+      "version": "0.2.0",
       "author": { "name": "Shuxiang Zhang", "email": "shuxiang.zhang@supahuman.ai" },
       "license": "MIT",
       "keywords": ["claude-code", "skills", "harness", "tuning", "setup", "scaffold"],
