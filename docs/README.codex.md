@@ -15,7 +15,7 @@ Or follow [.codex/INSTALL.md](../.codex/INSTALL.md) manually.
 ## How it works
 
 Codex scans `~/.agents/skills/` at startup, parses each `SKILL.md` frontmatter, and loads a
-skill's body on demand when its `description` matches the task. A single symlink makes all 19
+skill's body on demand when its `description` matches the task. A single symlink makes all 23
 claude-stack skills visible:
 
 ```

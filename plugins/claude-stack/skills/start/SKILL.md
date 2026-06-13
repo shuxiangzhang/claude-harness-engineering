@@ -17,10 +17,14 @@ When this skill is invoked, show the user the orientation below (adapt the wordi
 | Configure an existing codebase | *"configure Claude Code for this repo"* | `adopt-claude-stack` |
 | Build a feature | *"I want to build &lt;X&gt;"* | `brainstorm` → `specify` → … |
 | Fix a bug | *"&lt;X&gt; is broken"* / *"this test is failing"* | `debug` |
+| Understand an unfamiliar codebase | *"explain this repo"* / *"how does X work here"* | `understand-codebase` |
+| Make a small change to existing code | *"tweak &lt;X&gt;"* — skips the spec loop | `tdd` → `verify-done` |
 | Lock in project principles | *"set up the project's principles"* | `constitution` |
 | Check launch readiness | *"is this production ready?"* | `production-readiness-assessor` |
 
 That's all you need to start. The rest of the skills are stages the harness moves through *for* you — you don't pick them by hand.
+
+Also for existing-code work: **`refactor`** (restructure without changing behavior), **`review-changes`** (review a diff or PR), **`add-dependency`** (add or upgrade a library safely).
 
 ## The feature loop (what happens after "I want to build X")
 
@@ -38,7 +42,7 @@ Each stage hands off to the next and gates the work — a spec checklist, a cons
 
 ## You don't need to memorise the catalogue
 
-There are ~19 skills, but only the six doors above are entry points. Everything else is machinery the loop walks through. If you ever feel lost, say **"start"** (or run `/claude-stack:start`) to see this page again.
+There are ~23 skills, but only the handful of doors above are entry points. Everything else is machinery the loop walks through. If you ever feel lost, say **"start"** (or run `/claude-stack:start`) to see this page again.
 
 ## See also
 

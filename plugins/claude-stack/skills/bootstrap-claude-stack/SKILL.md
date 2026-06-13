@@ -590,7 +590,7 @@ Give the user a short summary:
 
 - Files created (with clickable paths if the harness renders them) — including `docs/architecture/ARCHITECTURE.md`; point the user at it and ask them to fill the headings as the design firms up.
 - What's deliberately *not* there and why (rules, subagents, GitHub MCP).
-- The natural next moves: "When you've written a couple of files in the same directory and want consistency, ask me to add a path-scoped rule. When you push to GitHub for the first time, ask me to add the GitHub MCP server and the push-to-main gate."
+- The natural next moves: "When you've written a couple of files in the same directory and want consistency, ask me to add a path-scoped rule. When you push to GitHub for the first time, ask me to add the GitHub MCP server and the bundled git gate (`assets/gate-git.sh` — defers pushes to `main`/`master` and `--no-verify`/`--no-gpg-sign` bypasses)."
 - "To build your first feature, this plugin ships the full development loop: **`brainstorm`** (refine the idea) → **`specify`** (formal spec) → **`plan`** → **`tasks`** → **`implement`** — with **`tdd`**, **`debug`**, and **`verify-done`** enforcing discipline throughout. Optionally seed project principles first with **`constitution`**."
 - "When the project grows and nears launch, run the **`production-readiness-assessor`** that ships with this plugin — just ask *'is this production ready?'* for an evidence-based scorecard and gate check. Nothing to install."
 
@@ -600,7 +600,7 @@ Give the user a short summary:
 - Do not pull seed content from files, URLs, or doc references when the user opts in. The chat is the only input — if the user has nothing concrete to type, treat that as "skip" and move on.
 - Do not install more than two MCP servers (the user-seeded hooks in step 2b don't count). Tool schemas cost tokens every turn.
 - Do not write a long CLAUDE.md unprompted. The ~45-line stub is intentional — the `Where things live` map and `Working on a task` lifecycle are always written (they wire the file into the rest of the stack), but everything else stays terse because descriptive bloat trains the user to ignore the file. Pasted user content is the only reason to grow it further, and even then keep the stub under ~60 lines or move long-form content into a path-scoped rule.
-- Do not add the git-push-to-main gate. There's no remote yet, and the gate is meaningless without one.
+- Do not auto-wire the git gate on day one — keep settings.json to just the formatter. The bundled `assets/gate-git.sh` (defers pushes to `main`/`master` and `--no-verify`/`--no-gpg-sign` bypasses) is ready to install; *offer* it, and wire it when the user adds a remote or asks for enforcement. The push clause is inert without a remote; the bypass guard works immediately. A hook can't prove tests/docs were done — those gates stay at the skill layer (`tdd`, `verify-done`, the docs-sync step).
 - Do not commit anything automatically. The user owns the first commit.
 - Do not overwrite an existing `.claude/CLAUDE.md` without explicit confirmation.
 - Do not silently scan the filesystem for "likely sensitive" paths to add to `.gitignore`. Ask in step 6 instead.

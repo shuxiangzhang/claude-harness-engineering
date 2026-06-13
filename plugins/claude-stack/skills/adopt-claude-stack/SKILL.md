@@ -324,27 +324,15 @@ The article's two practical hooks for the RAG service: post-tool formatter and p
 
 Wrap with `>/dev/null 2>&1 || true` so a formatter miss never blocks the agent and never pollutes its context. The article is explicit: *one-liner formatting hooks are the highest return on investment you can get.*
 
-**Pre-tool push gate** — skip entirely if `git remote -v` is empty. Otherwise drop in the article's `gate_git_push.sh` verbatim, generalised to also catch `master`:
+**Pre-tool git gate (the deterministic enforcement layer)** — install the bundled [`assets/gate-git.sh`](assets/gate-git.sh):
 
 ```bash
-#!/usr/bin/env bash
-set -euo pipefail
-payload="$(cat)"
-cmd="$(printf '%s' "$payload" | jq -r '.tool_input.command // empty')"
-case "$cmd" in
-  *"git push"*"origin main"*|*"git push"*"origin master"*|*"git push"*" main"*|*"git push"*" master"*)
-    jq -nc '{
-      "permissionDecision": "defer",
-      "reason": "Push to main/master requires human approval."
-    }'
-    ;;
-  *)
-    jq -nc '{"permissionDecision": "allow"}'
-    ;;
-esac
+cp assets/gate-git.sh .claude/hooks/gate-git.sh && chmod +x .claude/hooks/gate-git.sh
 ```
 
-Make it executable: `chmod +x .claude/hooks/gate_git_push.sh`. On Windows, this works through Git Bash / WSL; if the user is on pure PowerShell, write a `.ps1` equivalent and reference that path in `settings.json`.
+It defers two things for human approval: **pushes to `main`/`master`**, and any **`--no-verify`/`--no-gpg-sign`** that would bypass the formatter, the other gates, or signing. If `git remote -v` is empty the push clause simply never fires, so the gate is harmless to install either way — but the `--no-verify` guard earns its keep immediately. On pure PowerShell, port it to `.ps1` and point `settings.json` at that path.
+
+Be clear with the user about what this does **not** do: a hook can't prove tests were written, docs were updated, or the spec was satisfied — those are judgment calls. They stay at the skill layer (`tdd`, `verify-done`, the CLAUDE.md docs-sync step, `constitution`), with `finish-branch` as the pre-merge checkpoint. The gate is a floor, not the whole building.
 
 **`settings.json`** that wires both (drop the `PreToolUse` block if no remote):
 
@@ -355,7 +343,7 @@ Make it executable: `chmod +x .claude/hooks/gate_git_push.sh`. On Windows, this 
       {
         "matcher": "Bash",
         "hooks": [
-          { "type": "command", "command": ".claude/hooks/gate_git_push.sh" }
+          { "type": "command", "command": ".claude/hooks/gate-git.sh" }
         ]
       }
     ],

@@ -16,6 +16,7 @@ If there is even a **1% chance** a skill below applies to what you are doing, in
 | User is new / unsure how to drive this / "how do I use this" / "where do I start" | `start` |
 | New empty project, configure Claude Code | `bootstrap-claude-stack` |
 | Existing repo, configure Claude Code | `adopt-claude-stack` |
+| Unfamiliar codebase — map it before changing | `understand-codebase` |
 | Establish/amend project principles | `constitution` |
 | New feature idea, requirements fuzzy | `brainstorm` |
 | Idea/design ready → formal spec | `specify` |
@@ -24,6 +25,10 @@ If there is even a **1% chance** a skill below applies to what you are doing, in
 | Plan ready → task breakdown | `tasks` |
 | Before building: artifact consistency audit | `analyze` |
 | Execute the task list | `implement` |
+| Small change to existing code (not a new deliverable) | skip the spec loop — go `tdd` → `verify-done` |
+| Restructure code without changing behavior | `refactor` |
+| Review a diff / branch / PR (outside the implement loop) | `review-changes` |
+| Add or upgrade a third-party dependency | `add-dependency` |
 | Writing ANY production code | `tdd` |
 | Bug / test failure / unexpected behavior | `debug` |
 | About to claim done / commit / PR | `verify-done` |
