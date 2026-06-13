@@ -328,6 +328,7 @@ This file orients; detail lives next to the work. Read the relevant one before t
 ## Working on a task
 - **Starting:** skim `docs/architecture/ARCHITECTURE.md` for the big picture, read the active spec under `specs/` (if any), then `.claude/memory/constitution.md` and any `.claude/rules/` matching the files you'll touch. Make the smallest change that satisfies the goal.
 - **Finishing:** run the build/test/lint commands above. If a mistake was corrected, capture it with the `capture-lesson` skill. Record any non-obvious decision as an ADR in `docs/decisions/` (create the folder + index from the ADR template on the first one; check an ADR's Status before relying on it).
+- **Docs sync (do this before calling the task done):** if the change altered behavior, structure, interfaces, or a decision, find every doc that now describes the *old* reality — `docs/architecture/ARCHITECTURE.md`, an ADR in `docs/decisions/`, a spec, a runbook, the `README`, or `CLAUDE.md`/`.claude/rules/` themselves — and update it in the same change, or flag it explicitly. A doc that contradicts the code is worse than no doc.
 
 ## Notes
 This file is a living document. Add path-scoped rules under `.claude/rules/`

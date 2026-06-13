@@ -157,6 +157,7 @@ The `## Where things live` and `## Working on a task` sections are **always writ
   - If a mistake was corrected, capture it with the `capture-lesson` skill.
   - Record any non-obvious decision as an ADR under `docs/decisions/` (check an ADR's Status before relying on it).
   - {{anything the CONTRIBUTING.md says, distilled to one line}}
+  - **Docs sync:** if the change altered behavior, structure, interfaces, or a decision, find every doc that now describes the *old* reality — `docs/architecture/ARCHITECTURE.md`, an ADR, a spec, a runbook, the `README`, or `CLAUDE.md`/`.claude/rules/` themselves — and update it in the same change, or flag it. A doc that contradicts the code is worse than no doc.
 ```
 
 The article's discipline applies in full: **imperative, not descriptive**. Don't write *"write clean code"* — write *"all functions must have type annotations"*. Every line must change behaviour. If you can't point at evidence for the line in the repo, drop it.
