@@ -41,7 +41,29 @@ Windows (junction): see [.codex/INSTALL.md](.codex/INSTALL.md). Full guide:
 the `using-claude-stack` routing map natively instead of having it injected — everything else
 behaves the same.
 
-## The skills (18)
+## Your first 5 minutes
+
+You don't drive this by memorising skills — **describe what you want and the right skill fires.**
+After install, a SessionStart hook also shows a short menu whenever you open a session without
+a task. Lost at any point? Type **`start`** (or `/claude-stack:start`) for a plain-language tour.
+
+Six doors cover almost everything; pick one and just say the phrase:
+
+| Your goal | Type this to begin |
+|---|---|
+| Set up a brand-new / empty project | `set up Claude Code for this new project` |
+| Configure an existing codebase | `configure Claude Code for this repo` |
+| Build a feature | `I want to build <X>` |
+| Fix a bug | `<X> is broken` / `this test is failing` |
+| Lock in project principles | `set up the project's principles` |
+| Check launch readiness | `is this production ready?` |
+
+Two ways to invoke, either works: **describe the task in plain language** (preferred — the harness
+routes from your phrasing), or **name a skill** with `/claude-stack:<name>` when you want a specific
+stage. Everything in the catalogue below is a stage the loop walks through *for* you — the six doors
+plus `start` are the only entry points you need to remember.
+
+## The skills (19)
 
 ### Setup & governance
 
@@ -77,6 +99,7 @@ behaves the same.
 
 | Skill | Purpose |
 |---|---|
+| `start` | The human front door — a plain-language tour and the six entry-point phrases; say "start" anytime |
 | `using-claude-stack` | The routing map (injected each session by the hook) |
 | `capture-lesson` | Record a mistake-and-correction in `.claude/lessons/` so it isn't repeated; the index resurfaces each session |
 | `write-skill` | Create new skills with TDD-for-documentation (baseline failure → minimal skill → close loopholes) |
@@ -119,7 +142,7 @@ cp -r plugins/claude-stack/skills/tdd ~/.claude/skills/
 └── plugins/claude-stack/
     ├── .claude-plugin/plugin.json
     ├── hooks/                  # SessionStart routing-map injection
-    └── skills/                 # 18 skills, each with bundled assets/references
+    └── skills/                 # 19 skills, each with bundled assets/references
 ```
 
 ## Attribution

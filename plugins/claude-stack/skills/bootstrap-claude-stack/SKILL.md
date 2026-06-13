@@ -289,7 +289,7 @@ The bundled `assets/CLAUDE-global-template.md` is a tested set of 12 behavioural
 
 For any slot the user opts into, paste their content **verbatim with light reformatting only** (bullets, capitalisation). Never paraphrase. Content comes from the chat — do not read a file or fetch from a URL. If the user skips a slot, fall back to the default template content (placeholder bullets for Conventions; no section for Out-of-scope / Glossary).
 
-Then write the project stub. Use this template. Substitute `{{project_name}}`, `{{description}}`, `{{language}}`, `{{pkg_mgr}}`, and the slot content above. Keep it under 50 lines even with user content — if the user pastes a wall of text, ask whether the long-form material should live elsewhere (a path-scoped rule under `.claude/rules/`, or `docs/`).
+Then write the project stub. Use this template. Substitute `{{project_name}}`, `{{description}}`, `{{language}}`, `{{pkg_mgr}}`, and the slot content above. The `## Where things live` and `## Working on a task` sections are **always written verbatim** — they make the root file a hub that points at the rest of the stack (`.claude/rules/`, `.claude/lessons/`, `.claude/memory/constitution.md`, `specs/`) and tell the agent when to consult each. Leave their paths even though some targets are empty on day one; they fill in as the project grows and the relevant skills run. Keep the whole file under ~60 lines even with user content — if the user pastes a wall of text, ask whether the long-form material should live elsewhere (a path-scoped rule under `.claude/rules/`, or `docs/`).
 
 ```markdown
 # {{project_name}}
@@ -314,9 +314,17 @@ Then write the project stub. Use this template. Substitute `{{project_name}}`, `
 - Never commit secrets. Use environment variables.
 - Surface ambiguity rather than guessing.
 
-## Lessons
-Before non-trivial work, skim `.claude/lessons/LESSONS.md` — mistakes already made once.
-When a mistake is corrected, capture it there (use the `capture-lesson` skill).
+## Where things live
+This file orients; detail lives next to the work. Read the relevant one before touching an area.
+- `.claude/rules/*.md` — path-scoped conventions; auto-load when editing matching files.
+- `.claude/lessons/LESSONS.md` — mistakes already made once; skim before non-trivial work.
+- `.claude/memory/constitution.md` — non-negotiable principles, once the `constitution` skill has run.
+- `specs/NNN-<slug>/` — per-feature `spec.md` → `plan.md` → `tasks.md`, created by the `specify`/`plan`/`tasks` skills when you build a feature.
+- A subdirectory may add its own `CLAUDE.md` — the closest one wins for local detail.
+
+## Working on a task
+- **Starting:** read the active spec under `specs/` (if any), then `.claude/memory/constitution.md` and any `.claude/rules/` matching the files you'll touch. Make the smallest change that satisfies the goal.
+- **Finishing:** run the build/test/lint commands above. If a mistake was corrected, capture it with the `capture-lesson` skill. Record any non-obvious decision where the project keeps them.
 
 ## Notes
 This file is a living document. Add path-scoped rules under `.claude/rules/`
@@ -522,7 +530,7 @@ Give the user a short summary:
 - Do not put *content* into `.claude/rules/`, `.claude/agents/`, `.claude/skills/`, or `.claude/hooks/` on day one **unless the user explicitly pastes it during step 2b**. Empty-with-README is the default. User-supplied content is the explicit opt-in. Never fabricate placeholder rules/agents/skills/hooks to "fill" the slot.
 - Do not pull seed content from files, URLs, or doc references when the user opts in. The chat is the only input — if the user has nothing concrete to type, treat that as "skip" and move on.
 - Do not install more than two MCP servers (the user-seeded hooks in step 2b don't count). Tool schemas cost tokens every turn.
-- Do not write a long CLAUDE.md unprompted. The ~30-line stub is intentional — descriptive bloat trains the user to ignore the file. Pasted user content is the only reason to grow it, and even then keep the stub under ~50 lines or move long-form content into a path-scoped rule.
+- Do not write a long CLAUDE.md unprompted. The ~45-line stub is intentional — the `Where things live` map and `Working on a task` lifecycle are always written (they wire the file into the rest of the stack), but everything else stays terse because descriptive bloat trains the user to ignore the file. Pasted user content is the only reason to grow it further, and even then keep the stub under ~60 lines or move long-form content into a path-scoped rule.
 - Do not add the git-push-to-main gate. There's no remote yet, and the gate is meaningless without one.
 - Do not commit anything automatically. The user owns the first commit.
 - Do not overwrite an existing `.claude/CLAUDE.md` without explicit confirmation.

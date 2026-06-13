@@ -24,6 +24,11 @@ escape_for_json() {
 
 routing_escaped=$(escape_for_json "$routing_content")
 
+# Human-facing first-turn orientation. Static and pre-escaped for JSON (literal \n / \"),
+# so it is NOT passed through escape_for_json. Single-quoted to avoid shell expansion;
+# kept apostrophe-free so the single-quoted string stays intact.
+orientation='\n\n**First-turn orientation — show this to the human, do not just silently absorb it:** If the user has not yet given a concrete task this session (the first message is empty, a greeting, or asks how to use this / where to start / what you can do), open your reply with this menu, then route:\n- New project → say \"set up Claude Code for this new project\"\n- Existing repo → \"configure Claude Code for this repo\"\n- Build a feature → describe it: \"I want to build ...\"\n- Fix a bug → describe it: \"... is broken\"\n- Full tour → run /claude-stack:start\nIf the user already arrived with a concrete task, skip the menu and route to the matching skill silently.'
+
 # If this project has accrued lessons (past mistakes), inject the index too, so they
 # resurface automatically. Guarded: only when the file exists AND has real entries —
 # a no-op in repos that never adopted the stack, or whose lessons folder is empty.
@@ -40,7 +45,7 @@ cat <<EOF
 {
   "hookSpecificOutput": {
     "hookEventName": "SessionStart",
-    "additionalContext": "<EXTREMELY_IMPORTANT>\nYou have the claude-stack harness.\n\n**Below is your 'claude-stack:using-claude-stack' skill — the routing map for the rest. For all other skills, use the Skill tool:**\n\n${routing_escaped}${lessons_escaped}\n</EXTREMELY_IMPORTANT>"
+    "additionalContext": "<EXTREMELY_IMPORTANT>\nYou have the claude-stack harness.\n\n**Below is your 'claude-stack:using-claude-stack' skill — the routing map for the rest. For all other skills, use the Skill tool:**\n\n${routing_escaped}${lessons_escaped}${orientation}\n</EXTREMELY_IMPORTANT>"
   }
 }
 EOF
