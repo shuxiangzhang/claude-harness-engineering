@@ -1,6 +1,6 @@
 ---
 name: adopt-claude-stack
-description: Retrofit the Claude Code tuning stack into an EXISTING codebase by surveying what's already there and then installing the floor of the 8-layer stack from Anubhav's "I Spent 6 Months Tuning Claude Code" tutorial — a tailored CLAUDE.md, one formatting hook, two or three path-scoped rules for the most-touched directories, and three MCP servers (filesystem, library docs, plus GitHub if a remote exists). Use this skill whenever the user wants to add or improve Claude Code configuration on a repo that already has source files — triggers include "set up Claude Code for this repo", "adopt the tuning stack here", "retrofit claude config", "tune Claude for this existing project", "add a tailored CLAUDE.md", "the .claude folder here is empty and I want to fix it". Do not trigger on empty directories — those need a different scaffold.
+description: Retrofit the Claude Code tuning stack into an EXISTING codebase by surveying what's already there and then installing the floor of the 8-layer stack from Anubhav's "I Spent 6 Months Tuning Claude Code" tutorial — a tailored CLAUDE.md, one formatting hook, two or three path-scoped rules for the most-touched directories, and three MCP servers (filesystem, library docs, plus GitHub if a remote exists). Use this skill whenever the user wants to add or improve Claude Code configuration on a repo that already has source files — triggers include "set up Claude Code for this repo", "configure Claude Code for this repo", "adopt the tuning stack here", "retrofit claude config", "tune Claude for this existing project", "add a tailored CLAUDE.md", "the .claude folder here is empty and I want to fix it". Do not trigger on empty directories — those need a different scaffold.
 ---
 
 # adopt-claude-stack
@@ -109,6 +109,8 @@ Either way, the project `CLAUDE.md` itself stays tailored to the surveyed repo �
 
 Read the existing project `CLAUDE.md` (if any) first. **Never silently overwrite.** If gaps are clear, propose the additions as a diff. Then write the tailored version using the structure below.
 
+The `## Where things live` and `## Working on a task` sections are **always written** — they turn the root file into a hub that points at the rest of the stack (`.claude/rules/`, `.claude/lessons/`, `.claude/memory/constitution.md`, `specs/`) and the dev-loop skills, and tell the agent when to consult each. Their harness paths are fixed; the `{{…}}` slots in them are for *real* directories the survey turned up (e.g. an existing `docs/decisions/`), and you drop a slot line when the repo has no such directory. Do not invent a folder to fill a slot — the rest of the file's evidence-only discipline applies here too. If an existing `CLAUDE.md` already encodes a where-things-live map or a task lifecycle under different headings, fold these pointers into the user's existing structure rather than appending duplicate sections.
+
 ```markdown
 # {{project_name}}
 
@@ -136,14 +138,22 @@ Read the existing project `CLAUDE.md` (if any) first. **Never silently overwrite
 - If a change touches `{{directory with a rule file}}`, read `.claude/rules/{{rule}}.md` before planning.
 - Keep functions under ~40 lines. Split by responsibility, not by length.
 
-## Lessons
-- Before non-trivial work, skim `.claude/lessons/LESSONS.md` — mistakes already made once in this repo.
-- When a mistake is corrected, capture it there (use the `capture-lesson` skill).
+## Where things live
+`Layout` above maps the source; this maps the knowledge. Read the relevant one before touching an area.
+- `.claude/rules/*.md` — path-scoped conventions; auto-load when editing matching files.
+- `.claude/lessons/LESSONS.md` — mistakes already made once in this repo; skim before non-trivial work.
+- `.claude/memory/constitution.md` — non-negotiable principles, if the `constitution` skill has run.
+- `specs/NNN-<slug>/` — per-feature `spec.md` → `plan.md` → `tasks.md` from the `specify`/`plan`/`tasks` skills.
+- {{any real knowledge dir the survey found — e.g. `docs/decisions/` (ADRs), `docs/runbooks/`, `docs/architecture/`. Drop the line if the repo has none.}}
+- A subdirectory may carry its own `CLAUDE.md` — the closest one wins for local detail.
 
-## Before opening a PR
-- {{Detected lint / test commands}}
-- Update `CHANGELOG.md` under `## Unreleased`. (only if the repo has one)
-- {{anything the CONTRIBUTING.md says, distilled to one line}}
+## Working on a task
+- **Starting:** read the active spec under `specs/` (if any), then `.claude/memory/constitution.md` and any `.claude/rules/` matching the files you'll touch.
+- **Finishing — before opening a PR:**
+  - {{Detected lint / test commands}}
+  - Update `CHANGELOG.md` under `## Unreleased`. (only if the repo has one)
+  - If a mistake was corrected, capture it with the `capture-lesson` skill.
+  - {{anything the CONTRIBUTING.md says, distilled to one line}}
 ```
 
 The article's discipline applies in full: **imperative, not descriptive**. Don't write *"write clean code"* — write *"all functions must have type annotations"*. Every line must change behaviour. If you can't point at evidence for the line in the repo, drop it.

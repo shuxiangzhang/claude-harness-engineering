@@ -13,6 +13,7 @@ If there is even a **1% chance** a skill below applies to what you are doing, in
 
 | Situation | Skill |
 |---|---|
+| User is new / unsure how to drive this / "how do I use this" / "where do I start" | `start` |
 | New empty project, configure Claude Code | `bootstrap-claude-stack` |
 | Existing repo, configure Claude Code | `adopt-claude-stack` |
 | Establish/amend project principles | `constitution` |
