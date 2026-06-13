@@ -316,6 +316,7 @@ Then write the project stub. Use this template. Substitute `{{project_name}}`, `
 
 ## Where things live
 This file orients; detail lives next to the work. Read the relevant one before touching an area.
+- `docs/architecture/` — system architecture. `ARCHITECTURE.md` is the high-level overview (components, how they fit, external deps, key decisions) — read it first and keep it current; `README.md` indexes what else is in the folder (diagrams, per-component docs) as those are added.
 - `.claude/rules/*.md` — path-scoped conventions; auto-load when editing matching files.
 - `.claude/lessons/LESSONS.md` — mistakes already made once; skim before non-trivial work.
 - `.claude/memory/constitution.md` — non-negotiable principles, once the `constitution` skill has run.
@@ -323,7 +324,7 @@ This file orients; detail lives next to the work. Read the relevant one before t
 - A subdirectory may add its own `CLAUDE.md` — the closest one wins for local detail.
 
 ## Working on a task
-- **Starting:** read the active spec under `specs/` (if any), then `.claude/memory/constitution.md` and any `.claude/rules/` matching the files you'll touch. Make the smallest change that satisfies the goal.
+- **Starting:** skim `docs/architecture/ARCHITECTURE.md` for the big picture, read the active spec under `specs/` (if any), then `.claude/memory/constitution.md` and any `.claude/rules/` matching the files you'll touch. Make the smallest change that satisfies the goal.
 - **Finishing:** run the build/test/lint commands above. If a mistake was corrected, capture it with the `capture-lesson` skill. Record any non-obvious decision where the project keeps them.
 
 ## Notes
@@ -372,6 +373,62 @@ This plugin ships a general-purpose **`production-readiness-assessor`** skill al
 Because it's a sibling skill in the same plugin, there is **nothing to install or copy** — once this plugin is enabled, the assessor is already available. (This replaces the older behaviour of copying it into `~/.claude/skills/`; under plugin distribution that copy is redundant and only creates drift between copies.)
 
 A brand-new project usually has little to score yet, so **don't run it now**. Just note in the step 7 report that when the project grows and nears launch, the user can trigger it with phrases like *"is this production ready?"*, *"audit this repo before launch"*, or *"score my codebase on prod readiness"* — no setup required. The skill handles the rest, including its bundled `scan_signals.py` and the scorecard template.
+
+### 3c. Create `docs/architecture/` with a high-level overview (compulsory)
+
+Every project gets an architecture overview from day one — it is the first thing a new contributor (human or agent) reads to understand how the pieces fit, and on a fresh repo it doubles as a design sketch that shapes how the code grows. The folder holds two files: `ARCHITECTURE.md` (the substantive overview) and `README.md` (a short index of what's in the folder, so it renders as the folder's landing page). Diagrams and per-component docs join them later. Like `CLAUDE.md`, `ARCHITECTURE.md` is a **living skeleton**, not a finished document: write the section headings with short prompts, and let the user fill them in (offer to capture anything they describe now).
+
+```bash
+mkdir -p docs/architecture
+```
+
+First write `docs/architecture/ARCHITECTURE.md`. Substitute `{{project_name}}` / `{{description}}`; if the user described any components, flows, or dependencies during the inputs step, drop them into the matching sections verbatim — otherwise leave the prompt comments so they know what to fill in. Do **not** invent components a new project does not have yet.
+
+```markdown
+# Architecture overview — {{project_name}}
+
+High-level map of the system. Read this first; keep it current as the system grows.
+Promote durable, non-obvious decisions to `docs/decisions/` (ADRs) when that folder appears.
+
+## Purpose
+{{description}}
+
+## Components
+<!-- The major moving parts. One bullet each: name — responsibility. -->
+- _TODO: list components as they emerge._
+
+## How they fit together
+<!-- The main flow: what calls what, where data enters and leaves. Prose or an ASCII sketch. -->
+_TODO._
+
+## External dependencies
+<!-- Services, APIs, datastores, queues this system relies on, and why. -->
+- _TODO._
+
+## Key decisions
+<!-- Non-obvious choices and their rationale. -->
+- _TODO._
+
+## Constraints & non-goals
+- _TODO: what this system deliberately does not do._
+```
+
+Then write `docs/architecture/README.md` as the folder index — short, just a map of what lives here, so the folder has a sensible landing page and there is an obvious place to register diagrams as they get added:
+
+```markdown
+# Architecture docs
+
+What lives in this folder:
+
+- [ARCHITECTURE.md](ARCHITECTURE.md) — high-level overview; **start here**.
+
+<!-- Add entries as the folder grows, e.g.:
+- diagrams/system-context.svg — C4 system-context diagram
+- data-model.md — entity / relationship detail
+-->
+```
+
+Keep both short — skeletons, not essays. They grow as the architecture takes shape; the goal on day one is that `ARCHITECTURE.md` *exists and has the right headings* and the index points at it, so there is an obvious home for architectural thinking — and for the diagrams that will land beside it in `docs/architecture/` — the moment it happens.
 
 ### 4. Write `.claude/settings.json`
 
@@ -519,7 +576,7 @@ Don't commit anything automatically. Tell the user the repo is initialised and l
 
 Give the user a short summary:
 
-- Files created (with clickable paths if the harness renders them).
+- Files created (with clickable paths if the harness renders them) — including `docs/architecture/ARCHITECTURE.md`; point the user at it and ask them to fill the headings as the design firms up.
 - What's deliberately *not* there and why (rules, subagents, GitHub MCP).
 - The natural next moves: "When you've written a couple of files in the same directory and want consistency, ask me to add a path-scoped rule. When you push to GitHub for the first time, ask me to add the GitHub MCP server and the push-to-main gate."
 - "To build your first feature, this plugin ships the full development loop: **`brainstorm`** (refine the idea) → **`specify`** (formal spec) → **`plan`** → **`tasks`** → **`implement`** — with **`tdd`**, **`debug`**, and **`verify-done`** enforcing discipline throughout. Optionally seed project principles first with **`constitution`**."
@@ -546,3 +603,5 @@ The full eight-layer stack (CLAUDE.md + path-scoped rules + Plan Mode + subagent
 - No long-running parallel work that needs worktrees.
 
 Installing the full stack into an empty repo creates instructions that drift from reality the moment the project takes shape. The stub-plus-formatter shape stays correct as the project grows, and each additional layer can be added at the moment its problem first appears — which is also the moment the user can write the instruction with real context.
+
+The two things written *before* code — the `CLAUDE.md` stub and the `docs/architecture/ARCHITECTURE.md` skeleton — are the deliberate exceptions. They don't describe code that doesn't exist; they are living documents that *shape* how the code grows, and an empty repo is exactly when an architecture sketch is cheapest to start and most influential. They stay skeletons (headings + prompts) so they orient without pretending to knowledge the project hasn't earned yet.

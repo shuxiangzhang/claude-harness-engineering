@@ -109,7 +109,7 @@ Either way, the project `CLAUDE.md` itself stays tailored to the surveyed repo �
 
 Read the existing project `CLAUDE.md` (if any) first. **Never silently overwrite.** If gaps are clear, propose the additions as a diff. Then write the tailored version using the structure below.
 
-The `## Where things live` and `## Working on a task` sections are **always written** — they turn the root file into a hub that points at the rest of the stack (`.claude/rules/`, `.claude/lessons/`, `.claude/memory/constitution.md`, `specs/`) and the dev-loop skills, and tell the agent when to consult each. Their harness paths are fixed; the `{{…}}` slots in them are for *real* directories the survey turned up (e.g. an existing `docs/decisions/`), and you drop a slot line when the repo has no such directory. Do not invent a folder to fill a slot — the rest of the file's evidence-only discipline applies here too. If an existing `CLAUDE.md` already encodes a where-things-live map or a task lifecycle under different headings, fold these pointers into the user's existing structure rather than appending duplicate sections.
+The `## Where things live` and `## Working on a task` sections are **always written** — they turn the root file into a hub that points at the rest of the stack (`docs/architecture/ARCHITECTURE.md`, `.claude/rules/`, `.claude/lessons/`, `.claude/memory/constitution.md`, `specs/`) and the dev-loop skills, and tell the agent when to consult each. Their harness paths are fixed (the architecture overview is created in step 3a, so the map reference resolves); the `{{…}}` slots in them are for *other real* directories the survey turned up (e.g. an existing `docs/decisions/`), and you drop a slot line when the repo has no such directory. Do not invent a folder to fill a slot — the rest of the file's evidence-only discipline applies here too. If an existing `CLAUDE.md` already encodes a where-things-live map or a task lifecycle under different headings, fold these pointers into the user's existing structure rather than appending duplicate sections.
 
 ```markdown
 # {{project_name}}
@@ -140,15 +140,16 @@ The `## Where things live` and `## Working on a task` sections are **always writ
 
 ## Where things live
 `Layout` above maps the source; this maps the knowledge. Read the relevant one before touching an area.
+- `docs/architecture/` — system architecture. `ARCHITECTURE.md` is the high-level overview (components, how they fit, external deps, key decisions) — read it first and keep it current; `README.md` indexes what else is in the folder (diagrams, per-component docs) as those are added.
 - `.claude/rules/*.md` — path-scoped conventions; auto-load when editing matching files.
 - `.claude/lessons/LESSONS.md` — mistakes already made once in this repo; skim before non-trivial work.
 - `.claude/memory/constitution.md` — non-negotiable principles, if the `constitution` skill has run.
 - `specs/NNN-<slug>/` — per-feature `spec.md` → `plan.md` → `tasks.md` from the `specify`/`plan`/`tasks` skills.
-- {{any real knowledge dir the survey found — e.g. `docs/decisions/` (ADRs), `docs/runbooks/`, `docs/architecture/`. Drop the line if the repo has none.}}
+- {{any other knowledge dir the survey found — e.g. `docs/decisions/` (ADRs), `docs/runbooks/`. Drop the line if the repo has none.}}
 - A subdirectory may carry its own `CLAUDE.md` — the closest one wins for local detail.
 
 ## Working on a task
-- **Starting:** read the active spec under `specs/` (if any), then `.claude/memory/constitution.md` and any `.claude/rules/` matching the files you'll touch.
+- **Starting:** skim `docs/architecture/ARCHITECTURE.md` for the big picture, read the active spec under `specs/` (if any), then `.claude/memory/constitution.md` and any `.claude/rules/` matching the files you'll touch.
 - **Finishing — before opening a PR:**
   - {{Detected lint / test commands}}
   - Update `CHANGELOG.md` under `## Unreleased`. (only if the repo has one)
@@ -157,6 +158,61 @@ The `## Where things live` and `## Working on a task` sections are **always writ
 ```
 
 The article's discipline applies in full: **imperative, not descriptive**. Don't write *"write clean code"* — write *"all functions must have type annotations"*. Every line must change behaviour. If you can't point at evidence for the line in the repo, drop it.
+
+### 3a. Write the architecture overview (`docs/architecture/ARCHITECTURE.md`) — compulsory
+
+An existing repo already *has* an architecture; it's just undocumented. Capture it. This is a strong fit for adoption because the survey in step 1 already gathered the raw material (directory layout, manifests, services, CI). Produce a **real first draft** from those findings — not a skeleton — with explicit `> VERIFY:` markers wherever you inferred rather than confirmed, so the user can correct it.
+
+- If the repo already has an architecture doc (`docs/architecture/*`, a root `ARCHITECTURE.md`, a `## Architecture` section in the root `README.md`, a `docs/` design page), **do not overwrite it.** Read it, and either leave it as the canonical source (point the `Where things live` map at its real path instead) or, with the user's nod, consolidate it into `docs/architecture/ARCHITECTURE.md`.
+- Otherwise:
+
+```bash
+mkdir -p docs/architecture
+```
+
+Then write `docs/architecture/ARCHITECTURE.md`, populated from the survey:
+
+```markdown
+# Architecture overview — {{project_name}}
+
+High-level map of the system. Read this first; keep it current as the system grows.
+
+## Purpose
+{{one-sentence description, lifted from the README}}
+
+## Components
+<!-- The major moving parts found in the survey: name — responsibility — where it lives. -->
+- {{component}} (`{{dir}}/`) — {{responsibility}}
+
+## How they fit together
+<!-- Main flow: what calls what, where data enters and leaves. Prose or ASCII. -->
+{{observed flow}}  > VERIFY: confirm the request/data path with the team.
+
+## External dependencies
+<!-- Datastores, queues, third-party APIs, auth providers — from manifests / config / compose files. -->
+- {{dependency}} — {{role}}
+
+## Key decisions
+<!-- Non-obvious choices evident in the code; link existing ADRs under docs/decisions/ if present. -->
+- {{decision}} — {{rationale or "VERIFY: rationale unknown"}}
+
+## Constraints & non-goals
+- {{anything the code or docs make clear the system deliberately avoids}}
+```
+
+Then write `docs/architecture/README.md` as the folder index — short, just a map of what lives here (so the folder has a landing page and diagrams have a place to be registered as they are added). If the repo already has architecture material elsewhere (diagrams, a design page), link it from here too:
+
+```markdown
+# Architecture docs
+
+What lives in this folder:
+
+- [ARCHITECTURE.md](ARCHITECTURE.md) — high-level overview; **start here**.
+
+<!-- Add entries as the folder grows, e.g. diagrams/, data-model.md, per-component notes. -->
+```
+
+Keep `ARCHITECTURE.md` high-level — one screen, not an exhaustive design doc. The bar is: a new contributor reads it and knows the major pieces, how they talk, and what the system leans on. Detailed per-component docs and diagrams can join `docs/architecture/` later (and get listed in the index). Show the draft to the user (the `VERIFY:` markers are the review checklist) before treating it as canonical.
 
 ### 4. Layer 2 — Write 2–3 path-scoped rules
 
@@ -380,6 +436,7 @@ Show the user a summary in chat. They own the first commit.
 The report should include:
 
 - Files created or modified, as clickable paths.
+- The architecture overview at `docs/architecture/ARCHITECTURE.md` — flag the `> VERIFY:` markers explicitly and ask the user to confirm or correct them; it's a draft until they do.
 - Anything deliberately skipped and why ("no remote, so no push gate"; "no formatter configured in the repo, so no post-tool hook — let me know if you want one wired").
 - A short "what's next" list lifted directly from the article's *Floor and Ceiling* section, adapted to this repo:
   - Use **Plan Mode** for any task with non-trivial blast radius.
@@ -395,6 +452,7 @@ The report should include:
 
 - Do not write a generic stub `CLAUDE.md`. The whole reason this skill exists is to produce a tailored one. If you're filling in placeholders rather than observed facts, survey more.
 - Do not silently overwrite an existing `.claude/CLAUDE.md`, `settings.json`, or hook script. Read what's there, then offer additions as a diff.
+- Do not overwrite an existing architecture doc, and do not fabricate the overview. Base it on the survey; mark every inference with `> VERIFY:` rather than asserting it as fact.
 - Do not write speculative path-scoped rules. The article's discipline: each rule must encode something already true in the code.
 - Do not install more than three MCP servers during adoption. Tool schemas cost tokens every turn — Anthropic's own Tool Search documentation puts 50 tools at 10,000–20,000 tokens per turn without lazy loading.
 - Do not add the GitHub MCP server without checking the remote.
