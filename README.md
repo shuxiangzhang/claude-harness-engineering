@@ -121,7 +121,7 @@ plus `start` are the only entry points you need to remember.
 
 ```
 bootstrap / adopt            → harness configured
-constitution                 → principles that gate everything below
+constitution  (required)     → principles that gate everything below; plan stops without it
 brainstorm → specify → clarify → plan → tasks → analyze
 implement  (tdd · debug · verify-done throughout)
 finish-branch → production-readiness-assessor before launch

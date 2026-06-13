@@ -13,14 +13,14 @@ Translate the spec's WHAT into a technical HOW: stack decisions, structure, data
 
 ### 1. Load context
 
-Feature directory from `.claude/memory/active-feature.json` (fallbacks: most recent `specs/*/`, then ask). Read `spec.md` fully. Read `.claude/memory/constitution.md` if it exists. Unresolved `[NEEDS CLARIFICATION]` markers in the spec → stop and send the user to `clarify` first.
+Feature directory from `.claude/memory/active-feature.json` (fallbacks: most recent `specs/*/`, then ask). Read `spec.md` fully. Read `.claude/memory/constitution.md` — **required**: if it is missing, stop and run the `constitution` skill to establish the project's principles first, then resume. The design gate below is not optional. Unresolved `[NEEDS CLARIFICATION]` markers in the spec → stop and send the user to `clarify` first.
 
 ### 2. Instantiate the plan
 
 Read [assets/plan-template.md](assets/plan-template.md) (bundled) and create `FEATURE_DIR/plan.md`:
 
 - **Technical Context** — language/version, primary dependencies, storage, testing, target platform, project type, performance goals, constraints, scale. Mark genuine unknowns `NEEDS CLARIFICATION` — they become research tasks, not guesses.
-- **Constitution Check (GATE)** — evaluate every constitution principle against the intended approach. A MUST violation is an ERROR: either redesign, or record it in **Complexity Tracking** with why it's needed and why the simpler alternative fails. An unjustified violation blocks the plan. No constitution file → note that and move on.
+- **Constitution Check (GATE)** — evaluate every constitution principle against the intended approach. A MUST violation is an ERROR: either redesign, or record it in **Complexity Tracking** with why it's needed and why the simpler alternative fails. An unjustified violation blocks the plan. The constitution is required — the entry check guarantees one exists, so this gate always runs.
 - **Project Structure** — the concrete directory layout this feature will create/touch, with real paths. Delete unused layout options from the template.
 
 ### 3. Phase 0 — Research

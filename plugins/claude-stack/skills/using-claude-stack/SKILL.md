@@ -17,7 +17,7 @@ If there is even a **1% chance** a skill below applies to what you are doing, in
 | New empty project, configure Claude Code | `bootstrap-claude-stack` |
 | Existing repo, configure Claude Code | `adopt-claude-stack` |
 | Unfamiliar codebase — map it before changing | `understand-codebase` |
-| Establish/amend project principles | `constitution` |
+| Establish/amend project principles (required before `plan`) | `constitution` |
 | New feature idea, requirements fuzzy | `brainstorm` |
 | Idea/design ready → formal spec | `specify` |
 | Spec has ambiguities | `clarify` |

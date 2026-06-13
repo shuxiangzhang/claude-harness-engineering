@@ -157,7 +157,7 @@ The `## Where things live` and `## Working on a task` sections are **always writ
   - If a mistake was corrected, capture it with the `capture-lesson` skill.
   - Record any non-obvious decision as an ADR under `docs/decisions/` (check an ADR's Status before relying on it).
   - {{anything the CONTRIBUTING.md says, distilled to one line}}
-  - **Docs sync:** if the change altered behavior, structure, interfaces, or a decision, find every doc that now describes the *old* reality — `docs/architecture/ARCHITECTURE.md`, an ADR, a spec, a runbook, the `README`, or `CLAUDE.md`/`.claude/rules/` themselves — and update it in the same change, or flag it. A doc that contradicts the code is worse than no doc.
+  - **Docs sync:** if the change altered behavior, structure, interfaces, or a decision, find every doc that now describes the *old* reality — `docs/architecture/ARCHITECTURE.md`, an ADR, a spec, a runbook, the `README`, or `CLAUDE.md`/`.claude/rules/` themselves — and update it yourself in the same change. This is your job, not a note to hand back to the user; only *flag* a doc (with the reason) when its update is genuinely out of scope. A doc that contradicts the code is worse than no doc.
 ```
 
 The article's discipline applies in full: **imperative, not descriptive**. Don't write *"write clean code"* — write *"all functions must have type annotations"*. Every line must change behaviour. If you can't point at evidence for the line in the repo, drop it.
@@ -334,7 +334,16 @@ It defers two things for human approval: **pushes to `main`/`master`**, and any 
 
 Be clear with the user about what this does **not** do: a hook can't prove tests were written, docs were updated, or the spec was satisfied — those are judgment calls. They stay at the skill layer (`tdd`, `verify-done`, the CLAUDE.md docs-sync step, `constitution`), with `finish-branch` as the pre-merge checkpoint. The gate is a floor, not the whole building.
 
-**`settings.json`** that wires both (drop the `PreToolUse` block if no remote):
+**Pre-tool local checks** — also install the bundled [`assets/gate-checks.sh`](assets/gate-checks.sh), with this repo's commands filled in:
+
+```bash
+cp assets/gate-checks.sh .claude/hooks/gate-checks.sh && chmod +x .claude/hooks/gate-checks.sh
+# then set LINT_CMD / TYPE_CMD inside it to the commands from CLAUDE.md
+```
+
+On `git commit` it runs the fast checks (lint, type-check) and **denies the commit with the failure output** when one fails, so the agent fixes it before retrying — the deterministic local complement to the formatter, enforced through Claude Code's own hooks rather than a separate git pre-commit framework. It deliberately does **not** run the test suite: Claude Code hooks are time-bounded, so a multi-minute suite would time out — tests stay with `verify-done` (the agent runs them) and CI.
+
+**`settings.json`** that wires the formatter, the git gate, and the local checks gate (keep the `PreToolUse` block even without a remote — `gate-checks.sh` and the `--no-verify` guard still apply; only the push-to-`main` clause is inert):
 
 ```json
 {
@@ -343,7 +352,8 @@ Be clear with the user about what this does **not** do: a hook can't prove tests
       {
         "matcher": "Bash",
         "hooks": [
-          { "type": "command", "command": ".claude/hooks/gate-git.sh" }
+          { "type": "command", "command": ".claude/hooks/gate-git.sh" },
+          { "type": "command", "command": ".claude/hooks/gate-checks.sh" }
         ]
       }
     ],
@@ -445,7 +455,7 @@ The report should include:
   - Add a **subagent** in `.claude/agents/` the first time a review task repeats.
   - Add another **path-scoped rule** when a new directory grows enough to want consistency.
   - Add a **skill** in `.claude/skills/` when a workflow is stable enough to invoke by name.
-  - For the next substantial feature, use the plugin's development loop: **`brainstorm`** → **`specify`** → **`plan`** → **`tasks`** → **`implement`**, with **`tdd`**/**`debug`**/**`verify-done`** as standing discipline. Seed non-negotiable principles with **`constitution`** so `plan` and `analyze` can gate against them.
+  - For the next substantial feature, use the plugin's development loop: **`brainstorm`** → **`specify`** → **`plan`** → **`tasks`** → **`implement`**, with **`tdd`**/**`debug`**/**`verify-done`** as standing discipline. **First establish the project's non-negotiable principles with `constitution`** — this is required, not optional: `plan` stops without it and `analyze` gates against it.
   - Run the **`production-readiness-assessor`** (ships with this plugin — just ask *"is this production ready?"*) before any launch or major release for an evidence-based scorecard and gate check.
   - Add **worktrees** when you catch yourself switching branches more than twice an hour.
   - Add **headless mode** + a GitHub Actions workflow when you want the agent shipping while you sleep — copy [`references/example-github-actions.yml`](references/example-github-actions.yml) as the starting point. The end-to-end "ninety minute shipment" narrative is in [`references/example-replay.md`](references/example-replay.md) and shows how all eight layers compose during a real task.
