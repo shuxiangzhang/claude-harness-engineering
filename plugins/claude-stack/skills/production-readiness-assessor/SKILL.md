@@ -51,7 +51,7 @@ The assessment covers these in order. Each dimension is scored 1–5 on multiple
 
 Total: 360 points. See `references/scorecard-template.md` for the full check list and `references/scoring-rubric.md` for what each score means.
 
-These thirteen dimensions are a scoring instrument distilled from a longer source-of-truth checklist, bundled at [`references/production-readiness-checklist.md`](references/production-readiness-checklist.md) — 16 sections, ~230 concrete line items, drawn from years of running systems that have to stay up at 3am. The scorecard collapses those line items into scoreable rows; the checklist is where the granular, specific checks live. Consult it during evidence-gathering (Step 3) whenever a scorecard row is too coarse and you need the underlying concrete checks. The 16 checklist sections map onto the 13 dimensions as follows:
+These thirteen dimensions are a scoring instrument distilled from a longer source-of-truth checklist, bundled at [`references/production-readiness-checklist.md`](references/production-readiness-checklist.md) — 16 sections, ~180 concrete line items, drawn from years of running systems that have to stay up at 3am. The scorecard collapses those line items into scoreable rows; the checklist is where the granular, specific checks live. Consult it during evidence-gathering (Step 3) whenever a scorecard row is too coarse and you need the underlying concrete checks. The 16 checklist sections map onto the 13 dimensions as follows:
 
 | Checklist section | Scored under dimension |
 |---|---|
@@ -206,7 +206,7 @@ Don't push. One short paragraph at the end is enough.
 
 ## Files in this skill
 
-- `references/production-readiness-checklist.md` — the source-of-truth checklist (16 sections, ~230 line items) the 13 dimensions distill; consult for granular per-dimension checks
+- `references/production-readiness-checklist.md` — the source-of-truth checklist (16 sections, ~180 line items) the 13 dimensions distill; consult for granular per-dimension checks
 - `references/scorecard-template.md` — the blank template to fill in
 - `references/scoring-rubric.md` — what each score means, per dimension, with examples
 - `references/stack-signals.md` — per-stack evidence to look for (Node/TS, Python, Go, Java/Kotlin, Ruby, Rust, .NET)

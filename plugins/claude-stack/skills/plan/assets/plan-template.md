@@ -37,7 +37,7 @@ specs/[NNN-short-name]/
 ├── data-model.md   # Phase 1 output (if data involved)
 ├── quickstart.md   # Phase 1 output
 ├── contracts/      # Phase 1 output (if interfaces exposed)
-├── checklists/     # quality gates (implement HALTs on incomplete ones)
+├── checklists/     # quality gates (implement stops to confirm if any are incomplete)
 └── tasks.md        # tasks output (NOT created by plan)
 ```
 

@@ -9,9 +9,9 @@
 
 ## Phase 1: Setup (Shared Infrastructure)
 
-- [ ] T001 [e.g. Create project structure per plan.md]
-- [ ] T002 [e.g. Initialize project with dependencies]
-- [ ] T003 [P] [e.g. Configure linting and formatting]
+- [ ] T001 Create project structure per plan.md
+- [ ] T002 Initialize project with dependencies in pyproject.toml
+- [ ] T003 [P] Configure linting and formatting in pyproject.toml
 
 ---
 
@@ -19,8 +19,8 @@
 
 **⚠️ No user story work may begin until this phase completes.**
 
-- [ ] T004 [e.g. Set up schema/migrations framework]
-- [ ] T005 [P] [e.g. Base models all stories depend on]
+- [ ] T004 Set up migrations framework in migrations/env.py
+- [ ] T005 [P] Base models all stories depend on in src/models/base.py
 
 **Checkpoint**: Foundation ready — story phases can begin
 

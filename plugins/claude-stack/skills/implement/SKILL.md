@@ -14,9 +14,10 @@ Execute `FEATURE_DIR/tasks.md` with two quality mechanisms fused:
 
 ## Entry gates — check before any execution
 
-1. **Checklists**: scan `FEATURE_DIR/checklists/*.md`, count `- [ ]` vs `- [x]` per file, show the status table. **Any incomplete checklist → STOP** and ask: "Some checklists are incomplete. Proceed anyway?" Only an explicit yes continues.
-2. **Branch**: never start on main/master without explicit user consent — offer a feature branch or worktree.
-3. **Context**: read `tasks.md` and `plan.md` fully (required); `data-model.md`, `contracts/`, `research.md`, `quickstart.md`, constitution as available. Extract every task's **full text** up front — subagents receive text, they never re-read the plan.
+1. **Feature directory**: resolve `FEATURE_DIR` from `.claude/memory/active-feature.json` (fallbacks: most recent `specs/*/`, then ask) — every path below is relative to it.
+2. **Checklists**: scan `FEATURE_DIR/checklists/*.md`, count `- [ ]` vs `- [x]` per file, show the status table. **Any incomplete checklist → STOP** and ask: "Some checklists are incomplete. Proceed anyway?" Only an explicit yes continues.
+3. **Branch**: never start on main/master without explicit user consent — offer a feature branch or worktree.
+4. **Context**: read `tasks.md` and `plan.md` fully (required); `data-model.md`, `contracts/`, `research.md`, `quickstart.md`, constitution as available. Extract every task's **full text** up front — subagents receive text, they never re-read the plan.
 
 ## Per-task loop
 
@@ -24,8 +25,8 @@ For each task, in phase order (Setup → Foundational → stories by priority �
 
 1. **Dispatch the implementer** — fresh subagent via the Agent tool, prompt per [references/implementer-prompt.md](references/implementer-prompt.md): full task text + scene-setting context + invitation to ask questions first. Answer questions before letting it proceed.
 2. **Spec-compliance review** — fresh subagent per [references/spec-reviewer-prompt.md](references/spec-reviewer-prompt.md). Core stance: **do not trust the implementer's report; read the code**. Finds missing requirements, unrequested extras, misunderstandings. Issues → implementer fixes → **re-review**. Loop until ✅.
-3. **Code-quality review** — only after spec ✅. Fresh subagent per [references/quality-reviewer-prompt.md](references/quality-reviewer-prompt.md) on the task's diff (base/head SHAs). Critical/Important issues → fix → re-review.
-4. **Mark complete** — tick `[x]` in tasks.md, update the task tracker, report one-line progress.
+3. **Code-quality review** — only after spec ✅. Fresh subagent per [references/quality-reviewer-prompt.md](references/quality-reviewer-prompt.md) on the task's diff — capture `git rev-parse HEAD` before dispatch and again after the implementer commits to get the base/head SHAs. Critical/Important issues → fix → re-review.
+4. **Mark complete** — tick `[x]` in tasks.md (mirror it to your TodoWrite list if you keep one), report one-line progress.
 
 **Story checkpoints**: at each story's checkpoint line, run that story's independent test from the spec. A story that doesn't independently work doesn't pass its checkpoint — stop and fix before the next story.
 

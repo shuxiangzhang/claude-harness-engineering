@@ -133,7 +133,7 @@ DOC_FILES = {
 DOC_DIRS = {"docs", "doc", "documentation"}
 
 # Migration directories
-MIGRATION_DIRS = {"migrations", "migrate", "db/migrate", "alembic", "flyway", "liquibase"}
+MIGRATION_DIRS = {"migrations", "migrate", "alembic", "flyway", "liquibase"}
 
 # Observability / monitoring hints (search inside package manifests / requirements)
 OBSERVABILITY_HINTS = {
@@ -222,15 +222,14 @@ def detect_signals(root: Path) -> dict:
         if not is_file:
             # Directory
             parts = path_str.split("/")
-            top = parts[0] if parts else ""
-            if name in TEST_DIRS or top in TEST_DIRS:
-                if path_str not in signals["test_dirs"]:
-                    signals["test_dirs"].append(path_str)
+            # Record only top-level test roots, not every nested subdirectory under one.
+            if name in TEST_DIRS and not any(p in TEST_DIRS for p in parts[:-1]):
+                signals["test_dirs"].append(path_str)
             if name in IAC_DIRS:
                 signals["iac"].append({"type": name, "path": path_str})
             if name in DOC_DIRS:
                 signals["docs_dirs"].append(path_str)
-            if name in MIGRATION_DIRS or path_str.endswith(tuple(MIGRATION_DIRS)):
+            if name in MIGRATION_DIRS:
                 signals["migration_dirs"].append(path_str)
             # GitHub workflows directory
             if path_str == ".github/workflows":

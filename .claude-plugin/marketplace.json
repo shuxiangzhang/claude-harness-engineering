@@ -10,8 +10,8 @@
     {
       "name": "claude-stack",
       "source": "./plugins/claude-stack",
-      "description": "The complete harness in one plugin — 18 skills: bootstrap/adopt the tuning stack, constitution governance, the spec-driven loop (brainstorm, specify, clarify, plan, tasks, analyze, implement), discipline (tdd, debug, verify-done, finish-branch), capture-lesson mistake-memory, production-readiness audit, write-skill, and a SessionStart routing + lessons hook. Distilled from github/spec-kit and obra/superpowers (MIT).",
-      "version": "0.2.0",
+      "description": "The complete harness in one plugin — 19 skills: a `start` front door, bootstrap/adopt the tuning stack, constitution governance, the spec-driven loop (brainstorm, specify, clarify, plan, tasks, analyze, implement), discipline (tdd, debug, verify-done, finish-branch), capture-lesson mistake-memory, production-readiness audit, write-skill, and a SessionStart routing + lessons hook. Distilled from github/spec-kit and obra/superpowers (MIT).",
+      "version": "0.3.0",
       "author": { "name": "Shuxiang Zhang", "email": "shuxiang.zhang@supahuman.ai" },
       "license": "MIT",
       "keywords": ["claude-code", "skills", "harness", "tuning", "setup", "scaffold"],

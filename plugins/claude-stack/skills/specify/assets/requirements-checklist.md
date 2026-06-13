@@ -31,4 +31,4 @@
 ## Notes
 
 - Unchecked items require spec updates before `clarify` or `plan`
-- The `implement` skill HALTS on any incomplete checklist in this directory
+- The `implement` skill STOPS and asks for confirmation on any incomplete checklist in this directory
