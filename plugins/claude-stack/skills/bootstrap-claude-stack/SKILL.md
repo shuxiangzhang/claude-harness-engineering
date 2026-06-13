@@ -186,10 +186,11 @@ Also write an **empty index** at `.claude/lessons/LESSONS.md` so the convention 
 ```markdown
 # Lessons
 
-One line per lesson; the full lesson is in the linked file. Skim before non-trivial work.
+One row per active lesson, newest first; the full lesson is in the linked file. Skim before non-trivial work.
+Hard cap: 15 rows — promote/retire/consolidate before adding a 16th (see the `capture-lesson` skill).
 
-<!-- Added via the capture-lesson skill. Format:
-- [short title](slug.md) — trigger phrase
+<!-- Added via the capture-lesson skill. The link text IS the actable rule:
+- [the rule, imperative](YYYY-MM-DD-slug.md) — category; recall when <trigger>
 -->
 ```
 
@@ -317,6 +318,7 @@ Then write the project stub. Use this template. Substitute `{{project_name}}`, `
 ## Where things live
 This file orients; detail lives next to the work. Read the relevant one before touching an area.
 - `docs/architecture/` — system architecture. `ARCHITECTURE.md` is the high-level overview (components, how they fit, external deps, key decisions) — read it first and keep it current; `README.md` indexes what else is in the folder (diagrams, per-component docs) as those are added.
+- `docs/decisions/` — ADRs (architecture decision records); appears when you record your first non-obvious decision. Check an ADR's Status before applying it.
 - `.claude/rules/*.md` — path-scoped conventions; auto-load when editing matching files.
 - `.claude/lessons/LESSONS.md` — mistakes already made once; skim before non-trivial work.
 - `.claude/memory/constitution.md` — non-negotiable principles, once the `constitution` skill has run.
@@ -325,7 +327,7 @@ This file orients; detail lives next to the work. Read the relevant one before t
 
 ## Working on a task
 - **Starting:** skim `docs/architecture/ARCHITECTURE.md` for the big picture, read the active spec under `specs/` (if any), then `.claude/memory/constitution.md` and any `.claude/rules/` matching the files you'll touch. Make the smallest change that satisfies the goal.
-- **Finishing:** run the build/test/lint commands above. If a mistake was corrected, capture it with the `capture-lesson` skill. Record any non-obvious decision where the project keeps them.
+- **Finishing:** run the build/test/lint commands above. If a mistake was corrected, capture it with the `capture-lesson` skill. Record any non-obvious decision as an ADR in `docs/decisions/` (create the folder + index from the ADR template on the first one; check an ADR's Status before relying on it).
 
 ## Notes
 This file is a living document. Add path-scoped rules under `.claude/rules/`
@@ -429,6 +431,15 @@ What lives in this folder:
 ```
 
 Keep both short — skeletons, not essays. They grow as the architecture takes shape; the goal on day one is that `ARCHITECTURE.md` *exists and has the right headings* and the index points at it, so there is an obvious home for architectural thinking — and for the diagrams that will land beside it in `docs/architecture/` — the moment it happens.
+
+### 3d. Decision records (`docs/decisions/`) — the ADR pattern (not created now)
+
+Unlike the architecture overview, **do not create `docs/decisions/` at setup** — an empty repo has no decisions yet. Just make the pattern available so the agent reaches for it when the first non-obvious choice gets made. The skill bundles two templates:
+
+- [`assets/adr-template.md`](assets/adr-template.md) — one architecture decision record (Status / Context / Decision / Consequences).
+- [`assets/decisions-README-template.md`](assets/decisions-README-template.md) — the index, encoding the discipline that makes ADRs trustworthy: a **Status** column, sequential numbering, and "**check Status before applying**, update **both** rows on supersession."
+
+When the first durable decision arises, create `docs/decisions/` from these, write `0001-<slug>.md`, and add its row to the index. The `Working on a task` lifecycle in `CLAUDE.md` and the architecture overview both point here; until then, there is nothing to create.
 
 ### 4. Write `.claude/settings.json`
 

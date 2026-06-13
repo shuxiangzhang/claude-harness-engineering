@@ -141,11 +141,12 @@ The `## Where things live` and `## Working on a task` sections are **always writ
 ## Where things live
 `Layout` above maps the source; this maps the knowledge. Read the relevant one before touching an area.
 - `docs/architecture/` — system architecture. `ARCHITECTURE.md` is the high-level overview (components, how they fit, external deps, key decisions) — read it first and keep it current; `README.md` indexes what else is in the folder (diagrams, per-component docs) as those are added.
+- `docs/decisions/` — ADRs; if the survey found one, read its index (check an ADR's Status before applying); otherwise it appears on the first new decision.
 - `.claude/rules/*.md` — path-scoped conventions; auto-load when editing matching files.
 - `.claude/lessons/LESSONS.md` — mistakes already made once in this repo; skim before non-trivial work.
 - `.claude/memory/constitution.md` — non-negotiable principles, if the `constitution` skill has run.
 - `specs/NNN-<slug>/` — per-feature `spec.md` → `plan.md` → `tasks.md` from the `specify`/`plan`/`tasks` skills.
-- {{any other knowledge dir the survey found — e.g. `docs/decisions/` (ADRs), `docs/runbooks/`. Drop the line if the repo has none.}}
+- {{any other knowledge dir the survey found — e.g. `docs/runbooks/`. Drop the line if the repo has none.}}
 - A subdirectory may carry its own `CLAUDE.md` — the closest one wins for local detail.
 
 ## Working on a task
@@ -154,6 +155,7 @@ The `## Where things live` and `## Working on a task` sections are **always writ
   - {{Detected lint / test commands}}
   - Update `CHANGELOG.md` under `## Unreleased`. (only if the repo has one)
   - If a mistake was corrected, capture it with the `capture-lesson` skill.
+  - Record any non-obvious decision as an ADR under `docs/decisions/` (check an ADR's Status before relying on it).
   - {{anything the CONTRIBUTING.md says, distilled to one line}}
 ```
 
@@ -213,6 +215,17 @@ What lives in this folder:
 ```
 
 Keep `ARCHITECTURE.md` high-level — one screen, not an exhaustive design doc. The bar is: a new contributor reads it and knows the major pieces, how they talk, and what the system leans on. Detailed per-component docs and diagrams can join `docs/architecture/` later (and get listed in the index). Show the draft to the user (the `VERIFY:` markers are the review checklist) before treating it as canonical.
+
+### 3b. Decision records (`docs/decisions/`) — the ADR pattern
+
+If the survey found existing decision records (`docs/decisions/`, an `ADRs/` folder, a `## Decisions` section), point the `Where things live` map at them; if they lack a status-tracked index, offer to add one from the template below. **Do not invent ADRs for past choices** — only document decisions the team actually made and can confirm.
+
+If there are none, **do not create the folder at setup** — just make the pattern available. Two templates are bundled:
+
+- [`assets/adr-template.md`](assets/adr-template.md) — one ADR (Status / Context / Decision / Consequences).
+- [`assets/decisions-README-template.md`](assets/decisions-README-template.md) — the index with the discipline: a **Status** column, sequential numbering, and "**check Status before applying**, update **both** rows on supersession."
+
+The first new non-obvious decision is recorded here (create `docs/decisions/` + index then, numbered `0001`). The `Working on a task` lifecycle in `CLAUDE.md` points here.
 
 ### 4. Layer 2 — Write 2–3 path-scoped rules
 
@@ -413,7 +426,7 @@ Write each README with an example drawn from the article so the user has a worki
 - **`agents/README.md`** — point at the article's `retrieval-reviewer` subagent.
 - **`skills/README.md`** — point at the article's `new-rag-eval` skill (and note that user-level skills live in `~/.claude/skills/`).
 - **`hooks/README.md`** — explain that one hook is already wired (post-tool formatter, and push gate if remote) and point at the article's gate example as the shape for adding more.
-- **`lessons/README.md`** — explain that lessons are committed mistake-memory (past mistakes, not standing conventions); point at the `capture-lesson` skill for the format. Also write an empty `lessons/LESSONS.md` index (header + format comment, no entries). Lessons are committed, so do **not** add `.claude/lessons/` to `.gitignore`. Recall: skim the index before non-trivial work; the SessionStart hook auto-injects it once it has entries.
+- **`lessons/README.md`** — explain that lessons are committed mistake-memory (past mistakes, not standing conventions); point at the `capture-lesson` skill for the format, categories, and the 15-row cap + promote/retire/consolidate lifecycle. Also write an empty `lessons/LESSONS.md` index (header noting "newest first; hard cap 15 rows" + a format comment showing `- [the rule](YYYY-MM-DD-slug.md) — category; recall when <trigger>`, no entries). Lessons are committed, so do **not** add `.claude/lessons/` to `.gitignore`. Recall: skim the index before non-trivial work; the SessionStart hook auto-injects it once it has entries.
 
 Do not create `.claude/logs/` — that directory appears the first time the `PermissionDenied` audit hook writes to it. `.gitignore` should still exclude it (step 10).
 
